@@ -1,6 +1,6 @@
 NAME="ghostscript"
-VERSION=9.19
-RELEASE=1
+VERSION=9.20
+RELEASE=0
 CATEGORY="Graphics"
 SUMMARY="GPL PostScript interpreter"
 DESCRIPTION="GNU Ghostscript is a Postscript interpreter capable of converting PS
@@ -86,7 +86,7 @@ src_compile() {
 		GS_SONAME='libgs-$(GS_VERSION_MAJOR).dll.a'             \
 		GS_SONAME_MAJOR='libgs-$(GS_VERSION_MAJOR).dll.a'       \
 		GS_SONAME_MAJOR_MINOR='cyggs-$(GS_VERSION_MAJOR).dll'   \
-		LDFLAGS_SO='-shared -Wl,--out-implib,sobin/libgs.dll.a'
+		GS_LDFLAGS_SO='-shared -Wl,--out-implib,sobin/libgs.dll.a'
 }
 
 src_test() {
@@ -112,7 +112,7 @@ src_install() {
 		GS_SONAME='libgs-$(GS_VERSION_MAJOR).dll.a'             \
 		GS_SONAME_MAJOR='libgs-$(GS_VERSION_MAJOR).dll.a'       \
 		GS_SONAME_MAJOR_MINOR='cyggs-$(GS_VERSION_MAJOR).dll'   \
-		LDFLAGS_SO='-shared -Wl,--out-implib,sobin/libgs.dll.a'
+		GS_LDFLAGS_SO='-shared -Wl,--out-implib,sobin/libgs.dll.a'
 
 
 	mv ${D}/usr/bin/gs{c,}.exe
