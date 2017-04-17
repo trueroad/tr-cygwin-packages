@@ -1,0 +1,19 @@
+--- origsrc/ghostscript-9.07/lib/unix-lpr.sh	2013-02-14 08:58:16.000000000 +0100
++++ src/ghostscript-9.07/lib/unix-lpr.sh	2013-04-21 16:36:31.884900000 +0200
+@@ -19,12 +19,12 @@
+ # executable name set in the makefile
+ GS_EXECUTABLE=gs
+ 
+-PBMPLUSPATH=/usr/local/bin
+-PSFILTERPATH=/usr/local/lib/ghostscript
++PBMPLUSPATH=/usr/bin
++PSFILTERPATH=/usr/share/ghostscript
+ LOCALPATH=/usr/local/bin
+-X11HOME=/usr/X11R6
++X11HOME=/usr
+ 
+-PATH=/bin:/usr/bin:/usr/ucb:/usr/etc
++PATH=/bin:/usr/bin
+ PATH=${PATH}\:${LOCALPATH}\:${PBMPLUSPATH}\:${PSFILTERPATH}
+ LD_LIBRARY_PATH=${X11HOME}/lib
+ 
