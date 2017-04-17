@@ -1,6 +1,6 @@
 NAME="ghostscript"
-VERSION=9.20
-RELEASE=100
+VERSION=9.21rc1
+RELEASE=0
 CATEGORY="Graphics"
 SUMMARY="GPL PostScript interpreter"
 DESCRIPTION="GNU Ghostscript is a Postscript interpreter capable of converting PS
@@ -10,10 +10,9 @@ ORIG_PN="ghostscript"
 GENTOO_PN="ghostscript-gpl"
 
 HOMEPAGE="http://ghostscript.com/"
-SRC_URI="https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs`echo ${VERSION} | sed 's/\.//'`/${NAME}-${VERSION}.tar.gz"
+SRC_URI="https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/${VERSION}/${NAME}-${VERSION}.tar.gz"
 PATCH_URI="
   ghostscript-unixlpr.patch
-  ghostscript-bug697423.patch
 "
 
 # Build dependencies only

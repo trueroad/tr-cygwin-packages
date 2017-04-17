@@ -1,6 +1,6 @@
 NAME = ghostscript
-VERSION = 9.20
-RELEASE = 100
+VERSION = 9.21rc1
+RELEASE = 0
 
 CYGPORT_FILE = ${PN}.cygport
 FETCH_FILES = ${PN}-${PV}.tar.gz
