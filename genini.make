@@ -29,16 +29,16 @@
 #
 
 genini:
-ifneq ("$(wildcard $(WWW_DIST_ROOT)/$(ARCH))","")
-	rm -f $(WWW_DIST_ROOT)/$(ARCH)/setup.xz
-	mksetupini --arch $(ARCH) \
-		--inifile $(WWW_DIST_ROOT)/$(ARCH)/setup \
+ifneq ("$(wildcard $(WWW_DIST_ROOT)/$(ARCHDIR))","")
+	rm -f $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.xz
+	mksetupini --arch $(ARCHDIR) \
+		--inifile $(WWW_DIST_ROOT)/$(ARCHDIR)/setup \
 		--okmissing required-package \
 		--releasearea $(WWW_DIST_ROOT)
-	xz $(WWW_DIST_ROOT)/$(ARCH)/setup
+	xz $(WWW_DIST_ROOT)/$(ARCHDIR)/setup
 endif
 
 genini-all:
-	$(MAKE) ARCH=x86_64 genini
-	$(MAKE) ARCH=i686 genini
-	$(MAKE) ARCH=noarch genini
+	$(MAKE) ARCHDIR=x86_64 genini
+	$(MAKE) ARCHDIR=x86 genini
+	$(MAKE) ARCHDIR=noarch genini

@@ -41,6 +41,11 @@ PVR := $(VERSION)-$(RELEASE)
 PF := $(NAME)-$(VERSION)-$(RELEASE)
 
 ARCH ?= $(shell uname -m)
+ifeq ($(ARCH),i686)
+ARCHDIR := x86
+else
+ARCHDIR := $(ARCH)
+endif
 
 WORKDIR := $(PF).$(ARCH)
 
@@ -67,6 +72,7 @@ show:
 	@echo "PF = $(NAME)-$(VERSION)-$(RELEASE)"
 
 	@echo "ARCH = $(ARCH)"
+	@echo "ARCHDIR = $(ARCHDIR)"
 
 	@echo "WORKDIR = $(WORKDIR)"
 
@@ -89,8 +95,8 @@ cygport-install:	$(WORKDIR)/log/$(PF)-install.log
 package:		$(WORKDIR)/log/$(PF)-pkg.log
 
 store: $(WORKDIR)/dist/$(PN)
-	mkdir -p $(WWW_DIST_ROOT)/$(ARCH)/release/
-	cp -R $(WORKDIR)/dist/$(PN) $(WWW_DIST_ROOT)/$(ARCH)/release/
+	mkdir -p $(WWW_DIST_ROOT)/$(ARCHDIR)/release/
+	cp -R $(WORKDIR)/dist/$(PN) $(WWW_DIST_ROOT)/$(ARCHDIR)/release/
 
 include $(DEPTH)/genini.make
 
