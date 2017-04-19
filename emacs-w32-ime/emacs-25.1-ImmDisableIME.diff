@@ -1,0 +1,12 @@
+--- ./src/w32fns.c.orig	2016-06-29 18:49:23.000000000 +0900
++++ ./src/w32fns.c	2016-09-18 17:05:09.698974200 +0900
+@@ -9943,6 +9943,9 @@
+ 
+   {
+     HMODULE imm32_lib = GetModuleHandle ("imm32.dll");
++    BOOL (WINAPI * disable_ime_fn) (DWORD) = (BOOL (WINAPI *) (DWORD))
++      GetProcAddress (imm32_lib, "ImmDisableIME");
++    if (disable_ime_fn) disable_ime_fn (-1);
+     get_composition_string_fn = (ImmGetCompositionString_Proc)
+       GetProcAddress (imm32_lib, "ImmGetCompositionStringW");
+     get_ime_context_fn = (ImmGetContext_Proc)

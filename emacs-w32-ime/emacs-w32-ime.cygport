@@ -8,12 +8,20 @@ HOMEPAGE="
 SRC_URI="
 	https://ftp.gnu.org/gnu/emacs/emacs-${PV}.tar.xz
 	https://ftp.gnu.org/gnu/emacs/emacs-${PV}.tar.xz.sig
+	README.txt
 	postinstall.sh
 	preremove.sh
+	emacs-25.1-ImmDisableIME.diff
+	emacs-25.1-mingw-imagemagick.diff
 "
 SRC_DIR="emacs-${PV}"
 
 PATCH_URI="
+	emacs-25.1-w32-ime.diff
+	emacs-25.1-image-fit.diff
+	emacs-25.1-cmigemo.diff
+	emacs-25.1-cygwin-rsvg.diff
+	emacs-25.1-disable-w32-ime.diff
 "
 
 DEPEND="libtiff-devel
