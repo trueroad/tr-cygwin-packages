@@ -1,13 +1,13 @@
 NAME="emacs-w32-ime"
-VERSION="25.1"
-RELEASE=1
+VERSION="25.2"
+RELEASE=0.1
 
 HOMEPAGE="
 	https://www.gnu.org/software/emacs/
 "
 SRC_URI="
-	https://ftp.gnu.org/gnu/emacs/emacs-${PV}.tar.xz
-	https://ftp.gnu.org/gnu/emacs/emacs-${PV}.tar.xz.sig
+	http://alpha.gnu.org/gnu/emacs/pretest/emacs-25.2-rc2.tar.xz
+	http://alpha.gnu.org/gnu/emacs/pretest/emacs-25.2-rc2.tar.xz.sig
 	README.txt
 	postinstall.sh
 	preremove.sh
