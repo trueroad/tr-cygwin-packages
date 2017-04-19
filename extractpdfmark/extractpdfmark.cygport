@@ -6,15 +6,15 @@ HOMEPAGE="
 	https://github.com/trueroad/extractpdfmark/
 "
 SRC_URI="
-	https://github.com/trueroad/extractpdfmark/releases/download/v${PV}/extractpdfmark-${PV}.tar.gz
-	https://github.com/trueroad/extractpdfmark/releases/download/v${PV}/extractpdfmark-${PV}.tar.gz.asc
+	https://github.com/trueroad/extractpdfmark/releases/download/v${PV}/${PN}-${PV}.tar.gz
+	https://github.com/trueroad/extractpdfmark/releases/download/v${PV}/${PN}-${PV}.tar.gz.asc
 "
 
 CATEGORY="Publishing Utils"
 SUMMARY="Extract page mode and named destinations as PDFmark from PDF"
 DESCRIPTION="Extract PDFmark is able to extract page mode
 and named destinations as PDFmark from PDF.
-By using this you can get the small PDF files that have pre­served them."
+By using this you can get the small PDF files that have preserved them."
 
 DEPEND="gettext-devel
 	texlive
