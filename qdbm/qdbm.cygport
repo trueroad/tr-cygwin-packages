@@ -11,21 +11,34 @@ CATEGORY="Database Libs"
 SUMMARY="QDBM is a library of routines for managing a database."
 DESCRIPTION="QDBM is a library of routines for managing a database. The database is a simple data file containing records, each is a pair of a key and a value. Every key and value is serial bytes with variable length. Both binary data and character string can be used as a key and a value. There is neither concept of data tables nor data types. Records are organized in hash table or B+ tree."
 
+PATCH_URI="qdbm-cygwin-dll.patch"
+
+abi=14
 PKG_NAMES="
 	${PN}
-	${PN}-devel
+	lib${PN}${abi}
+	lib${PN}-devel
+	${PN}-doc
 "
 
 PKG_CONTENTS[0]="
-	usr/share/doc/
-	usr/share/man/
+	usr/bin/*.exe
+	usr/share/qdbm/
+	usr/share/man/man1/
 "
 
 PKG_CONTENTS[1]="
-	usr/bin/
+	usr/bin/cygqdbm-${abi}.dll
+"
+
+PKG_CONTENTS[2]="
 	usr/include/
 	usr/lib/
-	usr/share/qdbm/
+	usr/share/man/man3/
+"
+
+PKG_CONTENTS[3]="
+	usr/share/doc/
 "
 
 src_compile() {
@@ -34,5 +47,5 @@ src_compile() {
 	lndirs
         cd ${B}
 	./configure --prefix=/usr --exec-prefix=/usr --localstatedir=/var --sysconfdir=/etc
-        make
+        cygmake
 }

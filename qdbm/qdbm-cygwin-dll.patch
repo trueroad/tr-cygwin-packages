@@ -1,0 +1,43 @@
+--- a/Makefile.in	2010-08-05 02:14:34.000000000 +0900
++++ b/Makefile.in	2017-04-23 02:00:30.708519800 +0900
+@@ -37,6 +37,13 @@
+ MYMACLIBS = libqdbm.a libqdbm.$(LIBVER).$(LIBREV).0.dylib libqdbm.$(LIBVER).dylib libqdbm.dylib
+ MYHPUXLIBS = libqdbm.a libqdbm.sl
+ 
++OSNAME := $(shell uname -o)
++
++ifeq ($(OSNAME),Cygwin)
++MYLIBS := libqdbm.a libqdbm.dll.a
++MYBINS += cygqdbm-$(LIBVER).dll 
++endif
++
+ # Install destinations
+ prefix = @prefix@
+ exec_prefix = @exec_prefix@
+@@ -500,7 +507,11 @@
+ 	ln -f -s libqdbm.so.$(LIBVER).$(LIBREV).0 $@
+ 
+ 
++ifeq ($(OSNAME),Cygwin)
++libqdbm.dll.a : cygqdbm-$(LIBVER).dll
++else
+ libqdbm.dll.a : qdbm.dll
++endif
+ 
+ 
+ qdbm.dll : $(MYLIBOBJS)
+@@ -512,6 +523,14 @@
+ 	  -Wl,--whole-archive \
+ 	  -Wl,--no-whole-archive $(MYLIBOBJS) $(LIBLDFLAGS)
+ 
++cygqdbm-$(LIBVER).dll : $(MYLIBOBJS)
++	$(CC) -shared -o $@ \
++	  -Wl,--out-implib=libqdbm.dll.a \
++	  -Wl,--export-all-symbols \
++	  -Wl,--enable-auto-import \
++	  -Wl,--whole-archive $(MYLIBOBJS) \
++	  -Wl,--no-whole-archive $(LIBLDFLAGS)
++
+ 
+ libqdbm.$(LIBVER).$(LIBREV).0.dylib : $(MYLIBOBJS)
+ 	$(CC) -dynamiclib -o $@ \
