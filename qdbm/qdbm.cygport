@@ -1,0 +1,38 @@
+NAME="qdbm"
+VERSION="1.8.78"
+RELEASE=1
+
+HOMEPAGE="http://fallabs.com/qdbm/index.html"
+SRC_URI="
+	http://fallabs.com/qdbm/qdbm-${PV}.tar.gz
+"
+
+CATEGORY="Database Libs"
+SUMMARY="QDBM is a library of routines for managing a database."
+DESCRIPTION="QDBM is a library of routines for managing a database. The database is a simple data file containing records, each is a pair of a key and a value. Every key and value is serial bytes with variable length. Both binary data and character string can be used as a key and a value. There is neither concept of data tables nor data types. Records are organized in hash table or B+ tree."
+
+PKG_NAMES="
+	${PN}
+	${PN}-devel
+"
+
+PKG_CONTENTS[0]="
+	usr/share/doc/
+	usr/share/man/
+"
+
+PKG_CONTENTS[1]="
+	usr/bin/
+	usr/include/
+	usr/lib/
+	usr/share/qdbm/
+"
+
+src_compile() {
+        cd ${S}
+        cygautoreconf
+	lndirs
+        cd ${B}
+	./configure --prefix=/usr --exec-prefix=/usr --localstatedir=/var --sysconfdir=/etc
+        make
+}
