@@ -1,0 +1,11 @@
+--- Mew/mew-search.el.org	2016-09-07 22:12:06.000000000 +0900
++++ Mew/mew-search.el	2016-09-20 22:13:00.965460600 +0900
+@@ -535,7 +535,7 @@
+ 	  (setq pattern (concat "[UVSET] " pattern)))
+ 	 ((string-match "^ *$" pattern)
+ 	  (setq pattern "[UVSET]")))
+-	(setq args (list "-vu" "-max" "-1" "-ord" "@cdate NUMA" casket pattern))
++	(setq args (list "-vu" "-max" "-1" "-ord" "@cdate NUMD" casket pattern))
+ 	(unless (eq mew-cs-est 'utf-8)
+ 	  (setq args (cons (mew-cs-to-charset mew-cs-est) args))
+ 	  (setq args (cons "-ic" args)))

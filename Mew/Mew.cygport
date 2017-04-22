@@ -1,0 +1,60 @@
+NAME="Mew"
+VERSION="6.6.20161224"
+RELEASE=1
+
+HOMEPAGE="
+	http://www.mew.org/
+"
+
+GIT_URI="https://github.com/kazu-yamamoto/Mew.git"
+GIT_REV="8138c83339071884a2d6c5365a088ba8da4a0fc0"
+inherit git
+
+PATCH_URI="mew-hyperestraier-order.patch"
+
+CATEGORY="Mail"
+SUMMARY="Messaging in the Emacs World"
+DESCRIPTION="Mew is a user interface for text messages, multimedia messages (MIME), news articles and security functionality including PGP, S/MIME, SSH, and SSL. Also, Mew can work with the recent search services. "
+
+PKG_NAMES="
+	${PN}
+"
+
+MAKEOPTS="-j1"
+
+src_compile() {
+        cd ${S}
+        cygautoreconf
+        lndirs
+        cd ${B}
+        cygconf
+        cygmake
+}
+
+src_install() {
+        cd ${B}
+	cyginstall
+	make DESTDIR=${D} install-jinfo
+}
+
+PKG_NAMES="
+	${PN}
+	${PN}-doc
+	${PN}-bin
+	${PN}-el
+"
+
+PKG_CONTENTS[0]=""
+
+PKG_CONTENTS[1]="
+	usr/share/info/
+	usr/share/man/
+"
+
+PKG_CONTENTS[2]="
+	usr/bin/
+"
+
+PKG_CONTENTS[3]="
+	usr/share/emacs/
+"
