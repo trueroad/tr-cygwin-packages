@@ -46,6 +46,6 @@ src_compile() {
         cygautoreconf
 	lndirs
         cd ${B}
-	./configure --prefix=/usr --exec-prefix=/usr --localstatedir=/var --sysconfdir=/etc
+	./configure --prefix=/usr --exec-prefix=/usr --localstatedir=/var --sysconfdir=/etc --enable-pthread --enable-zlib --enable-bzip --enable-iconv
         cygmake
 }
