@@ -1,0 +1,44 @@
+--- hyperestraier-encore/Makefile.in.org	2017-04-23 19:07:25.000000000 +0900
++++ hyperestraier-encore/Makefile.in	2017-04-23 19:34:15.469255600 +0900
+@@ -41,6 +41,13 @@
+ MYCORELIBS = libestcore.a
+ MYFCGIS = estseek.fcgi estfraud.fcgi estproxy.fcgi estscout.fcgi estsupt.fcgi
+ 
++OSNAME := $(shell uname -o)
++
++ifeq ($(OSNAME),Cygwin)
++MYLIBS := libestraier.a libestraier.dll.a
++MYBINS += cygestraier-$(LIBVER).dll 
++endif
++
+ # Install destinations
+ prefix = @prefix@
+ exec_prefix = @exec_prefix@
+@@ -668,7 +675,11 @@
+ 	$(CC) -shared -Wl,-b -o $@ $(MYLIBOBJS)
+ 
+ 
++ifeq ($(OSNAME),Cygwin)
++libestraier.dll.a : cygestraier-$(LIBVER).dll
++else
+ libestraier.dll.a : estraier.dll
++endif
+ 
+ 
+ estraier.dll : $(MYLIBOBJS)
+@@ -681,6 +692,15 @@
+ 	  -Wl,--no-whole-archive \
+ 	  $(MYLIBOBJS) $(LDFLAGS) $(SKLIBS) $(MTLIBS) $(LIBS)
+ 
++cygestraier-$(LIBVER).dll : $(MYLIBOBJS)
++	$(CC) -shared -o $@ \
++	  -Wl,--out-implib=libestraier.dll.a \
++	  -Wl,--export-all-symbols \
++	  -Wl,--enable-auto-import \
++	  -Wl,--whole-archive $(MYLIBOBJS) \
++	  -Wl,--no-whole-archive \
++	  $(LDFLAGS) $(SKLIBS) $(MTLIBS) $(LIBS)
++
+ 
+ libestcore.a : estraier.o md5.o
+ 	$(AR) $(ARFLAGS) $@ estraier.o md5.o

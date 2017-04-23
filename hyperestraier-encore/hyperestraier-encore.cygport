@@ -8,6 +8,7 @@ GIT_REV="3b09726c9b39998228fb0bcde5eec31fb0408e63"
 inherit git
 
 PATCH_URI="
+	hyperestraier-encore-cygwin-dll.patch
 	he-enc-systype.patch
 "
 
@@ -24,18 +25,34 @@ src_compile() {
         cygmake
 }
 
+abi=9
 PKG_NAMES="
 	${PN}
-	${PN}-devel
+	lib${PN}${abi}
+	lib${PN}-devel
+	${PN}-doc
 "
 
 PKG_CONTENTS[0]="
+	--exclude=usr/bin/*.dll
+	--exclude=usr/share/hyperestraier-encore/doc/*
 	usr/bin/
 	usr/libexec/
-	usr/share/
+	usr/share/hyperestraier-encore/
+	usr/share/man/man1/
 "
 
 PKG_CONTENTS[1]="
+	usr/bin/*.dll
+"
+
+PKG_CONTENTS[2]="
 	usr/include/
 	usr/lib/
+	usr/share/man/man3/
+"
+
+PKG_CONTENTS[3]="
+	usr/share/doc/
+	usr/share/hyperestraier-encore/doc/
 "
