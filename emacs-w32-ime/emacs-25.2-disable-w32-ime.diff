@@ -1,5 +1,5 @@
---- ./src/w32fns.c.orig	2016-06-29 18:49:23.000000000 +0900
-+++ ./src/w32fns.c	2016-09-18 17:05:07.189158600 +0900
+--- ./src/w32fns.c.orig	2017-02-03 19:25:45.000000000 +0900
++++ ./src/w32fns.c	2017-04-22 12:06:14.718627500 +0900
 @@ -78,6 +78,8 @@
  extern const char *map_w32_filename (const char *, const char **);
  extern char * w32_strerror (int error_no);
@@ -98,7 +98,7 @@
  /***********************************************************************
  			 w32 specialized functions
   ***********************************************************************/
-@@ -9651,6 +9707,10 @@
+@@ -9652,6 +9708,10 @@
  
    /* W32 specific functions */
  
@@ -109,7 +109,7 @@
    defsubr (&Sw32_define_rgb_color);
    defsubr (&Sw32_default_color_map);
    defsubr (&Sw32_display_monitor_attributes_list);
-@@ -9923,6 +9983,11 @@
+@@ -9924,6 +9984,11 @@
  globals_of_w32fns (void)
  {
    HMODULE user32_lib = GetModuleHandle ("user32.dll");
@@ -121,8 +121,8 @@
    /*
      TrackMouseEvent not available in all versions of Windows, so must load
      it dynamically.  Do it once, here, instead of every time it is used.
---- ./src/w32term.h.orig	2016-06-29 18:49:23.000000000 +0900
-+++ ./src/w32term.h	2016-09-18 17:05:07.208157300 +0900
+--- ./src/w32term.h.orig	2017-02-03 19:25:45.000000000 +0900
++++ ./src/w32term.h	2017-04-22 12:06:14.721634500 +0900
 @@ -636,6 +636,8 @@
  #define UNICODE_NOCHAR 0xFFFF
  #endif

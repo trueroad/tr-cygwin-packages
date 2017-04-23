@@ -1,5 +1,5 @@
---- ./lisp/loadup.el.orig	2016-06-29 18:49:18.000000000 +0900
-+++ ./lisp/loadup.el	2016-09-18 17:05:10.355057800 +0900
+--- ./lisp/loadup.el.orig	2017-02-03 19:25:44.000000000 +0900
++++ ./lisp/loadup.el	2017-04-22 12:06:16.454926100 +0900
 @@ -271,6 +271,7 @@
        (load "term/w32-win")
        (load "disp-table")
@@ -8,9 +8,9 @@
          (load "w32-fns")
          (load "ls-lisp")
          (load "dos-w32"))))
---- ./lisp/term/w32-win.el.orig	2016-06-29 18:49:20.000000000 +0900
-+++ ./lisp/term/w32-win.el	2016-09-18 17:05:10.390062200 +0900
-@@ -268,6 +268,8 @@
+--- ./lisp/term/w32-win.el.orig	2017-02-03 19:25:44.000000000 +0900
++++ ./lisp/term/w32-win.el	2017-04-22 12:06:16.457932600 +0900
+@@ -271,6 +271,8 @@
         '(gdk-pixbuf "libgdk_pixbuf-2.0-0.dll")
         '(glib "libglib-2.0-0.dll")
         '(gobject "libgobject-2.0-0.dll")
@@ -19,8 +19,8 @@
         (if (>= libgnutls-version 30400)
  	   '(gnutls "libgnutls-30.dll")
  	 '(gnutls "libgnutls-28.dll" "libgnutls-26.dll"))
---- ./src/image.c.orig	2016-07-25 16:10:59.000000000 +0900
-+++ ./src/image.c	2016-09-18 17:05:10.465072000 +0900
+--- ./src/image.c.orig	2017-02-03 19:25:45.000000000 +0900
++++ ./src/image.c	2017-04-22 12:06:16.461933300 +0900
 @@ -8250,6 +8250,209 @@
  					    MagickPixelPacket *);
  #endif
@@ -243,7 +243,7 @@
    ex = AcquireExceptionInfo ();
    imtypes = GetMagickList ("*", &numf, ex);
    DestroyExceptionInfo (ex);
-@@ -9885,6 +10093,10 @@
+@@ -9902,6 +10110,10 @@
  #if defined (HAVE_IMAGEMAGICK)
    DEFSYM (Qimagemagick, "imagemagick");
    ADD_IMAGE_TYPE (Qimagemagick);

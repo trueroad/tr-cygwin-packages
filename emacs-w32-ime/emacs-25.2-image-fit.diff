@@ -1,5 +1,5 @@
---- ./lisp/image-mode.el.orig	2016-06-29 18:49:18.000000000 +0900
-+++ ./lisp/image-mode.el	2016-09-18 17:05:08.205784100 +0900
+--- ./lisp/image-mode.el.orig	2017-02-03 19:25:44.000000000 +0900
++++ ./lisp/image-mode.el	2017-04-22 12:06:15.251042600 +0900
 @@ -680,9 +680,12 @@
  	 (edges (and (null image-transform-resize)
  		     (window-inside-pixel-edges
@@ -15,8 +15,8 @@
  	 (image (if (not edges)
  		    (create-image file-or-data type data-p)
  		  (create-image file-or-data type data-p
---- ./lisp/image.el.orig	2016-06-29 18:49:18.000000000 +0900
-+++ ./lisp/image.el	2016-09-18 17:05:08.221286300 +0900
+--- ./lisp/image.el.orig	2017-02-03 19:25:44.000000000 +0900
++++ ./lisp/image.el	2017-04-22 12:06:15.254049100 +0900
 @@ -126,6 +126,15 @@
    :type '(repeat (choice directory variable))
    :initialize 'custom-initialize-delay)
@@ -33,8 +33,8 @@
  
  (defun image-load-path-for-library (library image &optional path no-error)
    "Return a suitable search path for images used by LIBRARY.
---- ./lisp/startup.el.orig	2016-06-29 18:49:18.000000000 +0900
-+++ ./lisp/startup.el	2016-09-18 17:05:08.254290200 +0900
+--- ./lisp/startup.el.orig	2017-02-03 19:25:44.000000000 +0900
++++ ./lisp/startup.el	2017-04-22 12:06:15.257048400 +0900
 @@ -1685,7 +1685,7 @@
  (defun fancy-splash-head ()
    "Insert the head part of the splash screen into the current buffer."
@@ -44,8 +44,8 @@
  	 (image-width (and img (car (image-size img))))
  	 (window-width (window-width)))
      (when img
---- ./src/image.c.orig	2016-07-25 16:10:59.000000000 +0900
-+++ ./src/image.c	2016-09-18 17:05:08.269292300 +0900
+--- ./src/image.c.orig	2017-02-03 19:25:45.000000000 +0900
++++ ./src/image.c	2017-04-22 12:06:15.261057100 +0900
 @@ -588,6 +588,102 @@
    return p;
  }
@@ -226,7 +226,7 @@
  
    /* If IMG->spec specifies a file name, create a non-file spec from it.  */
    file_name = image_spec_value (img->spec, QCfile, NULL);
-@@ -9006,6 +9151,7 @@
+@@ -9023,6 +9168,7 @@
  	    (RsvgHandle *, const guchar *, gsize, GError **));
  DEF_DLL_FN (gboolean, rsvg_handle_close, (RsvgHandle *, GError **));
  DEF_DLL_FN (GdkPixbuf *, rsvg_handle_get_pixbuf, (RsvgHandle *));
@@ -234,7 +234,7 @@
  DEF_DLL_FN (void, rsvg_handle_set_base_uri, (RsvgHandle *, const char *));
  
  DEF_DLL_FN (int, gdk_pixbuf_get_width, (const GdkPixbuf *));
-@@ -9044,6 +9190,7 @@
+@@ -9061,6 +9207,7 @@
    LOAD_DLL_FN (library, rsvg_handle_write);
    LOAD_DLL_FN (library, rsvg_handle_close);
    LOAD_DLL_FN (library, rsvg_handle_get_pixbuf);
@@ -242,7 +242,7 @@
    LOAD_DLL_FN (library, rsvg_handle_set_base_uri);
  
    LOAD_DLL_FN (gdklib, gdk_pixbuf_get_width);
-@@ -9081,6 +9228,7 @@
+@@ -9098,6 +9245,7 @@
  #  undef rsvg_handle_close
  #  undef rsvg_handle_get_dimensions
  #  undef rsvg_handle_get_pixbuf
@@ -250,7 +250,7 @@
  #  undef rsvg_handle_new
  #  undef rsvg_handle_set_base_uri
  #  undef rsvg_handle_write
-@@ -9099,6 +9247,7 @@
+@@ -9116,6 +9264,7 @@
  #  define rsvg_handle_close fn_rsvg_handle_close
  #  define rsvg_handle_get_dimensions fn_rsvg_handle_get_dimensions
  #  define rsvg_handle_get_pixbuf fn_rsvg_handle_get_pixbuf
@@ -258,7 +258,7 @@
  #  define rsvg_handle_new fn_rsvg_handle_new
  #  define rsvg_handle_set_base_uri fn_rsvg_handle_set_base_uri
  #  define rsvg_handle_write fn_rsvg_handle_write
-@@ -9160,6 +9309,48 @@
+@@ -9177,6 +9326,48 @@
    return success_p;
  }
  
@@ -307,7 +307,7 @@
  /* svg_load_image is a helper function for svg_load, which does the
     actual loading given contents and size, apart from frame and image
     structures, passed from svg_load.
-@@ -9182,6 +9373,10 @@
+@@ -9199,6 +9390,10 @@
    int height;
    const guint8 *pixels;
    int rowstride;
@@ -318,7 +318,7 @@
  
  #if ! GLIB_CHECK_VERSION (2, 36, 0)
    /* g_type_init is a glib function that must be called prior to
-@@ -9198,6 +9393,9 @@
+@@ -9215,6 +9410,9 @@
    if (filename)
      rsvg_handle_set_base_uri(rsvg_handle, filename);
  
@@ -328,7 +328,7 @@
    /* Parse the contents argument and fill in the rsvg_handle.  */
    rsvg_handle_write (rsvg_handle, contents, size, &err);
    if (err) goto rsvg_error;
-@@ -9801,6 +9999,7 @@
+@@ -9818,6 +10016,7 @@
    DEFSYM (QCmatrix, ":matrix");
    DEFSYM (QCcolor_adjustment, ":color-adjustment");
    DEFSYM (QCmask, ":mask");
@@ -336,7 +336,7 @@
  
    /* Other symbols.  */
    DEFSYM (Qlaplace, "laplace");
-@@ -9851,12 +10050,24 @@
+@@ -9868,12 +10067,24 @@
  	);
  #endif
  

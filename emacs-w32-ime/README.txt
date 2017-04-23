@@ -1,5 +1,5 @@
 ﻿■各パッチについて
-  emacs-25.1-*.diff は emacs-25.1 に対するパッチです。
+  emacs-25.2-*.diff は emacs-25.2 に対するパッチです。
 
   GNU emacs(x64) (http://hp.vector.co.jp/authors/VA052357/emacs.html)
   の追加機能の主なものを切り出したものと自作のものをいくつか。
@@ -15,12 +15,16 @@
   cmigemo を dynamic module で組み込むようにしてみたものを
   https://github.com/rzl24ozi/cmigemo-module
   に置いているので興味があればお試しください。
+  あとIMEパッチを使用するなら不要でしょうが mozc_emacs_helper を
+  dynamic module にしてみたもの
+  https://github.com/rzl24ozi/mozc-emacs-helper-module
+  とか。
 
   なお GNU emacs(x64) のオリジナルの emacs からの修正部分は GNU emacs(x64) インストール後に
   C:\Program Files\GNU\Emacs23\distfiles\ にパッチがあります。
 
 
-□emacs-25.1-w32-ime.diff (https://gist.github.com/rzl24ozi/8c20b904c9f5e588ba99)
+□emacs-25.2-w32-ime.diff (https://gist.github.com/rzl24ozi/8c20b904c9f5e588ba99)
   GNU emacs(x64) の IME 関連部分を切り出したものです。
   mingw版 emacs、 cygwin版 emacs-w32 に適用できます。
 
@@ -31,7 +35,7 @@
 --without-reconversion : RECONVERSION無効(同時にDOCUMENTFEEDも無効)
 --without-documentfeed : DOCUMENTFEED無効
 
-□emacs-25.1-image-fit.diff (https://gist.github.com/rzl24ozi/bceff92df3359267657b)
+□emacs-25.2-image-fit.diff (https://gist.github.com/rzl24ozi/bceff92df3359267657b)
   GNU emacs(x64) のイメージフィットオプション追加部分を切り出したものです。
   イメージフィットオプションについては GNU emacs(x64) のページを参照してください。
  
@@ -39,7 +43,7 @@
   効かないようです。
   試してみるなら http://www.ijg.org/ からソースを取得し自ビルドして使用するなどしてください。
 
-□emacs-25.1-cmigemo.diff (https://gist.github.com/rzl24ozi/6b1207d20970737f44c7)
+□emacs-25.2-cmigemo.diff (https://gist.github.com/rzl24ozi/6b1207d20970737f44c7)
   GNU emacs(x64) でダイナミックロード機能が独自に実装される前の cmigemo 組み込み部分です。
 
   configure に以下のオプションを追加しています。
@@ -50,20 +54,20 @@
   emacs 本体に修正を加えるのがためらわれるなら dynamic module として組み込むもの
   (https://github.com/rzl24ozi/cmigemo-module)もありますのでお試しください。
 
-□emacs-25.1-cygwin-rsvg.diff (https://gist.github.com/rzl24ozi/b0165eaf404a0c5a47ae)
+□emacs-25.2-cygwin-rsvg.diff (https://gist.github.com/rzl24ozi/b0165eaf404a0c5a47ae)
   cygwin版 emacs-w32 に rsvg を組み込みます。
 
-□emacs-25.1-mingw-imagemagick.diff (https://gist.github.com/rzl24ozi/69c54eb86974fa1cbea1)
+□emacs-25.2-mingw-imagemagick.diff (https://gist.github.com/rzl24ozi/69c54eb86974fa1cbea1)
   mingw版 emacs に imagemagick を組み込みます。
 
-□emacs-25.1-disable-w32-ime.diff (https://gist.github.com/rzl24ozi/76aadcfc58404d9e7326)
+□emacs-25.2-disable-w32-ime.diff (https://gist.github.com/rzl24ozi/76aadcfc58404d9e7326)
   mingw版 emacs、cygwin版 emacs-w32 に 以下の関数を追加します。
 
   (disable-w32-ime)    ; IME無効化(IMEをONにできなくなります)
   (enable-w32-ime)     ; IME無効化を元に戻す
   (w32-ime-disabled-p) ; IMEが無効化されている場合 t を返す
 
-□emacs-25.1-ImmDisableIME.diff (https://gist.github.com/rzl24ozi/4808fbd8fb3122933d7f)
+□emacs-25.2-ImmDisableIME.diff (https://gist.github.com/rzl24ozi/4808fbd8fb3122933d7f)
   mingw版 emacs、cygwin版 emacs-w32 で 起動時に ImmDisableIME () を使用して IME を無効化します。
   IME 有効にはできません。W32-IMEイラネ な人向け。やっていることは
   http://d.hatena.ne.jp/pekke/20140525/1401001174
@@ -123,7 +127,7 @@ $ pacman -S mingw-w64-x86_64-xpm-nox
 
   でビルド関連のパッケージをインストール。
 
-  emacs-25.1 ソースを展開しソーストップディレクトリに移動。
+  emacs-25.2 ソースを展開しソーストップディレクトリに移動。
   必要に応じパッチを当ててください。
 
   configure.ac を変更するパッチを当てた場合は
@@ -133,7 +137,7 @@ $ ./autogen.sh
   を実行し configure を生成しなおしておいてください。
 
 
-  emacs-25.1 ソーストップディレクトリで
+  emacs-25.2 ソーストップディレクトリで
 
 $ ./configure --host=x86_64-w64-mingw32 --prefix=(emacsインストール場所)
 $ make
@@ -163,7 +167,7 @@ $ make GZIP_PROG="" install
 
 
 [imagemagick組み込み]
-  emacs-25.1-mingw-imagemagick.diff を当てた場合は ImageMagick が組み込めますが、emacs 本体が
+  emacs-25.2-mingw-imagemagick.diff を当てた場合は ImageMagick が組み込めますが、emacs 本体が
   ImageMagick-6 までにしか対応していないようなので MSYS2 パッケージの mingw-w64-x86_64-imagemagick
   最新版は使えません。以前の ImageMagick-6 のときに何故かうまく画像が表示できなかったこともあり私は
   ImageMagick を以下のように自ビルドしています。
@@ -195,7 +199,7 @@ $ make install
 
 
 [cmigemo組み込み]
-  emacs-25.1-cmigemo.diff を当てた場合は cmigemo が組み込めます。組み込む場合は
+  emacs-25.2-cmigemo.diff を当てた場合は cmigemo が組み込めます。組み込む場合は
   https://osdn.jp/projects/nkf/downloads/64158/nkf-2.1.4.tar.gz/
   から nkf のソースを取得してmake、インストールしておき
   http://www.kaoriya.net/software/cmigemo (https://github.com/koron/cmigemo)
@@ -283,9 +287,9 @@ migemo.dll
 
   cmigemo を組み込んだ場合は
   (cmigemoインストール場所)/share/migemo/utf-8/*
-  も (emacsインストール先)/share/emacs/25.1/etc/migemo/utf-8/ 下へコピーしておいてください。
+  も (emacsインストール先)/share/emacs/25.2/etc/migemo/utf-8/ 下へコピーしておいてください。
   cmigemo.el を load すれば migemo のインクリメンタル検索ができます。
-  cmigemo.el は emacs-25.1-cmigemo.diff を当てた後の site-lisp/ 下にあります。
+  cmigemo.el は emacs-25.2-cmigemo.diff を当てた後の site-lisp/ 下にあります。
 
 ■cygwin emacs-w32 のビルド
   ビルド関連のライブラリはパッケージの *-devel をインストールしておけばよいです。
@@ -298,7 +302,7 @@ $ ./autogen.sh
 
   を実行して configure を生成しなおしておいてください。
 
-  emacs-25.1-cmigemo.diff を当てて cmigemo を組み込むなら
+  emacs-25.2-cmigemo.diff を当てて cmigemo を組み込むなら
   https://osdn.jp/projects/nkf/downloads/64158/nkf-2.1.4.tar.gz/
   から nkf のソースを取得してmake、インストールしておき
   http://www.kaoriya.net/software/cmigemo (https://github.com/koron/cmigemo)
@@ -309,7 +313,7 @@ $ make cyg-install
 
   でインストールしておいてください。
 
-  emacs-25.1 ソーストップディレクトリで
+  emacs-25.2 ソーストップディレクトリで
 
 $ ./configure --with-w32 --prefix=(emacsインストール場所)
 $ make

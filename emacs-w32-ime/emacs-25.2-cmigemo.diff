@@ -1,5 +1,5 @@
---- ./configure.ac.orig	2016-07-25 16:08:36.000000000 +0900
-+++ ./configure.ac	2016-10-08 17:11:48.369749100 +0900
+--- ./configure.ac.orig	2017-02-03 23:34:30.000000000 +0900
++++ ./configure.ac	2017-04-22 12:06:13.236144500 +0900
 @@ -355,6 +355,8 @@
  OPTION_DEFAULT_ON([zlib],[don't compile with zlib decompression support])
  OPTION_DEFAULT_OFF([modules],[compile with dynamic modules support])
@@ -9,7 +9,7 @@
  AC_ARG_WITH([file-notification],[AS_HELP_STRING([--with-file-notification=LIB],
   [use a file notification library (LIB one of: yes, inotify, kqueue, gfile, w32, no)])],
   [ case "${withval}" in
-@@ -3461,6 +3463,15 @@
+@@ -3455,6 +3457,15 @@
  AC_SUBST(LIBPNG)
  AC_SUBST(PNG_CFLAGS)
  
@@ -25,7 +25,7 @@
  ### Use -ltiff if available, unless '--with-tiff=no'.
  ### mingw32 doesn't use -ltiff, since it loads the library dynamically.
  HAVE_TIFF=no
-@@ -5271,7 +5282,7 @@
+@@ -5269,7 +5280,7 @@
  emacs_config_features=
  for opt in XAW3D XPM JPEG TIFF GIF PNG RSVG CAIRO IMAGEMAGICK SOUND GPM DBUS \
    GCONF GSETTINGS NOTIFY ACL LIBSELINUX GNUTLS LIBXML2 FREETYPE M17N_FLT \
@@ -34,7 +34,7 @@
    XWIDGETS; do
  
      case $opt in
-@@ -5321,6 +5332,7 @@
+@@ -5319,6 +5330,7 @@
    Does Emacs use -lxft?                                   ${HAVE_XFT}
    Does Emacs directly use zlib?                           ${HAVE_ZLIB}
    Does Emacs have dynamic modules support?                ${HAVE_MODULES}
@@ -42,9 +42,9 @@
    Does Emacs use toolkit scroll bars?                     ${USE_TOOLKIT_SCROLL_BARS}
    Does Emacs support Xwidgets (requires gtk3)?            ${HAVE_XWIDGETS}
  "])
---- /dev/null	2016-10-08 17:12:50.000000000 +0900
-+++ ./site-lisp/cmigemo.el	2016-10-08 17:12:14.421095900 +0900
-@@ -0,0 +1,858 @@
+--- /dev/null	2017-04-22 12:06:13.000000000 +0900
++++ ./site-lisp/cmigemo.el	2017-04-22 12:06:13.241155100 +0900
+@@ -0,0 +1,859 @@
 +;;; migemo.el --- Japanese incremental search through dynamic pattern expansion -*- lexical-binding: t; -*-
 +
 +;; $Id: migemo.el.in,v 1.9 2012/06/24 04:09:59 kaworu Exp $
@@ -419,7 +419,8 @@
 +  ;; C/Migemo begin
 +  (if (fboundp 'cmigemo-open)
 +      (when cmigemo-initialized
-+	(cmigemo-close))
++	(cmigemo-close)
++	(setq cmigemo-initialized nil))
 +    ;; !!!WARNING!!! the following block has original indent
 +  (when (and migemo-process (eq (process-status migemo-process) 'run))
 +    (kill-process migemo-process)
@@ -903,8 +904,8 @@
 +;; End:
 +
 +;;; migemo.el ends here
---- /dev/null	2016-10-08 17:12:50.000000000 +0900
-+++ ./src/cmigemo.c	2016-10-08 17:11:48.396750400 +0900
+--- /dev/null	2017-04-22 12:06:13.000000000 +0900
++++ ./src/cmigemo.c	2017-04-22 12:06:13.243159900 +0900
 @@ -0,0 +1,457 @@
 +#ifdef NULL
 +#undef NULL
@@ -1363,8 +1364,8 @@
 +  defsubr(&Scmigemo_load);
 +}
 +#endif /* HAVE_CMIGEMO */
---- ./src/emacs.c.orig	2016-07-25 16:10:59.000000000 +0900
-+++ ./src/emacs.c	2016-10-08 17:11:48.405745000 +0900
+--- ./src/emacs.c.orig	2017-02-03 19:25:45.000000000 +0900
++++ ./src/emacs.c	2017-04-22 12:06:13.245164100 +0900
 @@ -198,6 +198,10 @@
  static void sort_args (int argc, char **argv);
  static void syms_of_emacs (void);
@@ -1376,7 +1377,7 @@
  /* C99 needs each string to be at most 4095 characters, and the usage
     strings below are split to not overflow this limit.  */
  static char const *const usage_message[] =
-@@ -1523,6 +1527,10 @@
+@@ -1526,6 +1530,10 @@
  
        syms_of_profiler ();
  
@@ -1387,8 +1388,8 @@
        keys_of_casefiddle ();
        keys_of_cmds ();
        keys_of_buffer ();
---- ./src/Makefile.in.orig	2016-06-29 18:49:20.000000000 +0900
-+++ ./src/Makefile.in	2016-10-08 17:11:48.412745900 +0900
+--- ./src/Makefile.in.orig	2017-02-03 19:25:44.000000000 +0900
++++ ./src/Makefile.in	2017-04-22 12:06:13.247168800 +0900
 @@ -397,7 +397,7 @@
  	region-cache.o sound.o atimer.o \
  	doprnt.o intervals.o textprop.o composite.o xml.o $(NOTIFY_OBJ) \

@@ -11,17 +11,17 @@ SRC_URI="
 	README.txt
 	postinstall.sh
 	preremove.sh
-	emacs-25.1-ImmDisableIME.diff
-	emacs-25.1-mingw-imagemagick.diff
+	emacs-25.2-ImmDisableIME.diff
+	emacs-25.2-mingw-imagemagick.diff
 "
 SRC_DIR="emacs-${PV}"
 
 PATCH_URI="
-	emacs-25.1-w32-ime.diff
-	emacs-25.1-image-fit.diff
-	emacs-25.1-cmigemo.diff
-	emacs-25.1-cygwin-rsvg.diff
-	emacs-25.1-disable-w32-ime.diff
+	emacs-25.2-w32-ime.diff
+	emacs-25.2-image-fit.diff
+	emacs-25.2-cmigemo.diff
+	emacs-25.2-cygwin-rsvg.diff
+	emacs-25.2-disable-w32-ime.diff
 "
 
 DEPEND="libtiff-devel
