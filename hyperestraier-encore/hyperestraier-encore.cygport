@@ -1,0 +1,41 @@
+NAME="hyperestraier-encore"
+VERSION="1.5.0.20110915"
+RELEASE=1
+
+HOMEPAGE="https://github.com/fumiyas/hyperestraier-encore"
+GIT_URI="https://github.com/fumiyas/hyperestraier-encore.git"
+GIT_REV="3b09726c9b39998228fb0bcde5eec31fb0408e63"
+inherit git
+
+PATCH_URI="
+	he-enc-systype.patch
+"
+
+CATEGORY="Utils"
+SUMMARY="Hyper Estraier Encore: a full-text search system"
+DESCRIPTION="Hyper Estraier is a full-text search system. You can search lots of documents for some documents including specified words. If you run a web site, it is useful as your own search engine for pages in your site. Also, it is useful as search utilities of mail boxes and file servers."
+
+src_compile() {
+        cd ${S}
+        cygautoreconf
+	lndirs
+        cd ${B}
+	./configure --prefix=/usr --exec-prefix=/usr --localstatedir=/var --sysconfdir=/etc
+        cygmake
+}
+
+PKG_NAMES="
+	${PN}
+	${PN}-devel
+"
+
+PKG_CONTENTS[0]="
+	usr/bin/
+	usr/libexec/
+	usr/share/
+"
+
+PKG_CONTENTS[1]="
+	usr/include/
+	usr/lib/
+"
