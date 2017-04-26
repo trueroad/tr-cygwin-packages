@@ -1,0 +1,24 @@
+NAME="gnupg2.0"
+VERSION="2.0.30"
+RELEASE=1
+
+HOMEPAGE="
+	https://www.gnupg.org/
+"
+SRC_URI="
+	https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-${PV}.tar.bz2
+	https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-${PV}.tar.bz2.sig
+"
+SRC_DIR="gnupg-${PV}"
+PATCH_URI="
+	gnupg2.0-cygwin-pth.patch
+"
+
+CATEGORY="Utils"
+SUMMARY="The GNU Privacy Guard"
+DESCRIPTION="GnuPG is a complete and free implementation
+of the OpenPGP standard as defined by RFC4880 (also known as PGP)."
+
+PKG_NAMES="
+	${PN}
+"
