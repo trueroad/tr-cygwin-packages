@@ -22,6 +22,7 @@ PATCH_URI="
 	emacs-25.2-cmigemo.diff
 	emacs-25.2-cygwin-rsvg.diff
 	emacs-25.2-disable-w32-ime.diff
+	emacs-https-proxy.patch
 "
 
 DEPEND="libtiff-devel
