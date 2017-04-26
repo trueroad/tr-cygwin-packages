@@ -1,0 +1,61 @@
+NAME="pth"
+VERSION="2.0.7"
+RELEASE=1
+
+HOMEPAGE="https://www.gnu.org/software/${PN}/"
+SRC_URI="
+	http://ftp.gnu.org/gnu/${PN}/${P}.tar.gz
+	http://ftp.gnu.org/gnu/${PN}/${P}.tar.gz.sig
+"
+
+PATCH_URI="
+	pth-cygwin-dll.patch
+"
+
+CATEGORY="Libs"
+SUMMARY="The GNU Portable Threads"
+DESCRIPTION="Pth is a very portable POSIX/ANSI-C based library
+for Unix platforms which provides non-preemptive priority-based scheduling
+for multiple threads of execution (aka ``multithreading'')
+inside event-driven applications."
+
+MAKEOPTS="-j1 no_undefined=-no-undefined"
+
+ABI=20
+PKG_NAMES="
+	${PN}
+	lib${PN}${abi}
+	lib${PN}-devel
+"
+
+PKG_CONTENTS[0]="
+	usr/share/doc/
+"
+
+PKG_CONTENTS[1]="
+	usr/bin/*.dll
+"
+
+PKG_CONTENTS[2]="
+	--exclude=usr/bin/*.dll
+	usr/bin/
+	usr/include/
+	usr/lib/
+	usr/share/aclocal/
+	usr/share/man/
+"
+
+src_compile() {
+	cd ${S}
+	cp /usr/share/aclocal/libtool.m4 .
+	cat /usr/share/aclocal/ltoptions.m4 >> libtool.m4
+	cat /usr/share/aclocal/ltsugar.m4 >> libtool.m4
+	cat /usr/share/aclocal/ltversion.m4 >> libtool.m4
+	cat /usr/share/aclocal/lt~obsolete.m4 >> libtool.m4
+	cygautoreconf
+	lndirs
+	cd ${B}
+	./configure --prefix=/usr --exec-prefix=/usr --localstatedir=/var \
+		--sysconfdir=/etc
+	make ${MAKEOPTS}
+}

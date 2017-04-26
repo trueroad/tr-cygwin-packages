@@ -1,0 +1,14 @@
+--- pth-2.0.7/Makefile.in.org	2006-06-09 02:54:01.000000000 +0900
++++ pth-2.0.7/Makefile.in	2017-04-26 19:54:24.809072100 +0900
+@@ -169,9 +169,11 @@
+ #   build the static and possibly shared libraries
+ libpth.la: $(LOBJS)
+ 	$(LIBTOOL) --mode=link --quiet $(CC) -o libpth.la $(LOBJS) \
++	$(no_undefined) \
+ 	-rpath $(libdir) -version-info `$(SHTOOL) version -lc -dlibtool $(_VERSION_FILE)`
+ libpthread.la: pthread.lo $(LOBJS)
+ 	$(LIBTOOL) --mode=link --quiet $(CC) -o libpthread.la pthread.lo $(LOBJS) \
++	$(no_undefined) \
+ 	-rpath $(libdir) -version-info `$(SHTOOL) version -lc -dlibtool $(_VERSION_FILE)`
+ 
+ #   build the manual pages
