@@ -43,6 +43,12 @@ SUBDIRS_TARGETS := \
 
 all:		$(addsuffix /.all,$(SUBDIRS))
 install:	$(addsuffix /.store,$(SUBDIRS)) genini-all
+
+stage1:		$(addsuffix /.all,$(STAGE1PKG_DIRS))
+stage1-install:	$(addsuffix /.store,$(STAGE1PKG_DIRS)) genini-all
+stage2:		$(addsuffix /.all,$(STAGE2PKG_DIRS))
+stage2-install:	$(addsuffix /.store,$(STAGE2PKG_DIRS)) genini-all
+
 clean:		$(addsuffix /.clean,$(SUBDIRS))
 fetchclean:	$(addsuffix /.fetchclean,$(SUBDIRS))
 
