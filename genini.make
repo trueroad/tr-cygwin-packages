@@ -30,12 +30,15 @@
 
 genini:
 ifneq ("$(wildcard $(WWW_DIST_ROOT)/$(ARCHDIR))","")
-	rm -f $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.xz
+	rm -f $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini
 	mksetupini --arch $(ARCHDIR) \
-		--inifile $(WWW_DIST_ROOT)/$(ARCHDIR)/setup \
+		--inifile $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini \
 		--okmissing required-package \
 		--releasearea $(WWW_DIST_ROOT)
-	xz $(WWW_DIST_ROOT)/$(ARCHDIR)/setup
+	bzip2 -zck $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini > \
+		$(WWW_DIST_ROOT)/$(ARCHDIR)/setup.bz2
+	xz -zck $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini > \
+		$(WWW_DIST_ROOT)/$(ARCHDIR)/setup.xz
 endif
 
 genini-all:
