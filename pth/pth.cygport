@@ -21,7 +21,7 @@ inside event-driven applications."
 
 MAKEOPTS="-j1 no_undefined=-no-undefined"
 
-ABI=20
+abi=20
 PKG_NAMES="
 	${PN}
 	lib${PN}${abi}
