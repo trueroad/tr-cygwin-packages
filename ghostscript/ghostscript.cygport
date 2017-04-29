@@ -12,6 +12,8 @@ GENTOO_PN="ghostscript-gpl"
 HOMEPAGE="http://ghostscript.com/"
 SRC_URI="https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs`echo ${VERSION} | sed 's/\.//'`/${NAME}-${VERSION}.tar.xz"
 PATCH_URI="
+  bug697799-1.patch
+  bug697799-2.patch
   ghostscript-unixlpr.patch
 "
 
