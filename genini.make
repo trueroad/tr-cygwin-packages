@@ -41,7 +41,29 @@ ifneq ("$(wildcard $(WWW_DIST_ROOT)/$(ARCHDIR))","")
 		$(WWW_DIST_ROOT)/$(ARCHDIR)/setup.xz
 endif
 
+signini: $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini.sig \
+	$(WWW_DIST_ROOT)/$(ARCHDIR)/setup.bz2.sig \
+	$(WWW_DIST_ROOT)/$(ARCHDIR)/setup.xz.sig
+
+%.ini.sig: %.ini
+	gpg -b $<
+%.bz2.sig: %.bz2
+	gpg -b $<
+%.xz.sig: %.xz
+	gpg -b $<
+
 genini-all:
 	$(MAKE) ARCHDIR=x86_64 genini
 	$(MAKE) ARCHDIR=x86 genini
 	$(MAKE) ARCHDIR=noarch genini
+
+signini-all:
+ifneq ("$(wildcard $(WWW_DIST_ROOT)/x86_64)","")
+	$(MAKE) ARCHDIR=x86_64 signini
+endif
+ifneq ("$(wildcard $(WWW_DIST_ROOT)/x86)","")
+	$(MAKE) ARCHDIR=x86 signini
+endif
+ifneq ("$(wildcard $(WWW_DIST_ROOT)/noarch)","")
+	$(MAKE) ARCHDIR=noarch signini
+endif

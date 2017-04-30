@@ -39,7 +39,7 @@ SUBDIRS_TARGETS := \
 	$(foreach t,$(TARGETS),$(addsuffix $(addprefix /.,$t),$(SUBDIRS)))
 
 .PHONY:	all install clean fetchclean $(SUBDIRS_TARGETS) \
-	distclean genini genini-all show
+	distclean genini genini-all signini signini-all show
 
 all:		$(addsuffix /.all,$(SUBDIRS))
 install:	$(addsuffix /.store,$(SUBDIRS)) genini-all
