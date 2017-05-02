@@ -5,6 +5,7 @@ STAGE1PKG_DIRS = \
 	emacs-w32-ime \
 	qdbm \
 	pth libassuan libksba npth \
+	jpegoptim \
 
 # Stage 2 packages: depends on phase 1 packages
 STAGE2PKG_DIRS = \
