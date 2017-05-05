@@ -14,9 +14,13 @@ CATEGORY="Publishing Utils"
 SUMMARY="Extract page mode and named destinations as PDFmark from PDF"
 DESCRIPTION="Extract PDFmark is able to extract page mode
 and named destinations as PDFmark from PDF.
-By using this you can get the small PDF files that have preserved them."
+By using this you can get the small PDF files that have preserved
+the page mode and the named destinations."
 
-DEPEND="gettext-devel
+# texlive (pdftex), ghostscript (gs), and diffutils (diff)
+# are needed for testing "cygport extractpdfmark.cygport check".
+DEPEND="libpoppler-devel
+	gettext-devel
 	texlive
 	ghostscript
 	diffutils"
