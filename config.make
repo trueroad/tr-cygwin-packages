@@ -4,7 +4,8 @@ STAGE1PKG_DIRS = \
 	ghostscript \
 	emacs-w32-ime \
 	qdbm \
-	pth libassuan libksba npth \
+	pth libassuan libksba \
+	npth libgcrypt \
 	jpegoptim \
 
 # Stage 2 packages: depends on phase 1 packages
