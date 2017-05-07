@@ -1,0 +1,23 @@
+NAME="gnupg2.1"
+VERSION="2.1.20"
+RELEASE=1
+
+HOMEPAGE="
+	https://www.gnupg.org/
+"
+SRC_URI="
+	https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-${PV}.tar.bz2
+	https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-${PV}.tar.bz2.sig
+"
+SRC_DIR="gnupg-${PV}"
+
+DEPEND="libnpth-devel"
+
+CATEGORY="Utils"
+SUMMARY="The GNU Privacy Guard"
+DESCRIPTION="GnuPG is a complete and free implementation
+of the OpenPGP standard as defined by RFC4880 (also known as PGP)."
+
+PKG_NAMES="
+	${PN}
+"
