@@ -1,0 +1,39 @@
+From: Chris Liddell <chris.liddell@artifex.com>
+Date: Thu, 11 May 2017 13:07:48 +0000 (+0100)
+Subject: Bug 697892: fix check for op stack underflow.
+X-Git-Url: http://git.ghostscript.com/?p=ghostpdl.git;a=commitdiff_plain;h=ccfd2c75
+
+Bug 697892: fix check for op stack underflow.
+
+In the original fix, I used the wrong method to check for stack underflow, this
+is using the correct method.
+---
+
+diff --git a/psi/zfrsd.c b/psi/zfrsd.c
+index 950588d..9c035b9 100644
+--- a/psi/zfrsd.c
++++ b/psi/zfrsd.c
+@@ -54,8 +54,7 @@ zrsdparams(i_ctx_t *i_ctx_p)
+     uint i;
+     int code = 0;
+ 
+-    if (ref_stack_count(&o_stack) < 1)
+-        return_error(gs_error_stackunderflow);
++    check_op(1);
+     if (!r_has_type(op, t_dictionary) && !r_has_type(op, t_null)) {
+         return_error(gs_error_typecheck);
+     }
+diff --git a/psi/zmisc3.c b/psi/zmisc3.c
+index 3f01d39..43803b5 100644
+--- a/psi/zmisc3.c
++++ b/psi/zmisc3.c
+@@ -65,8 +65,7 @@ zeqproc(i_ctx_t *i_ctx_p)
+     ref2_t stack[MAX_DEPTH + 1];
+     ref2_t *top = stack;
+ 
+-    if (ref_stack_count(&o_stack) < 2)
+-        return_error(gs_error_stackunderflow);
++    check_op(2);
+     if (!eqproc_check_type(op -1) || !eqproc_check_type(op)) {
+         make_false(op - 1);
+         pop(1);

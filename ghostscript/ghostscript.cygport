@@ -14,6 +14,8 @@ SRC_URI="https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download
 PATCH_URI="
   bug697799-1.patch
   bug697799-2.patch
+  bug697846.patch
+  bug697892.patch
   ghostscript-unixlpr.patch
 "
 
