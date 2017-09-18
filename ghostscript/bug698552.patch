@@ -1,0 +1,39 @@
+From fc08a2810b1594ce865190763a7831704c00846d Mon Sep 17 00:00:00 2001
+From: Ken Sharp <ken.sharp@artifex.com>
+Date: Sun, 17 Sep 2017 18:34:59 +0100
+Subject: [PATCH] pdfwrite - properly process Octal 134 '\' in pdfmark UTF16
+ string
+
+Bug #698552 "Some PDF outline UTF-16 text is broken"
+
+The escape processing wasn't catering for an escaped escape '\\' which
+led to us writing the escaped escape direclty and corrupted the remainder
+of the string. We normaly don't use short escapes but write ocral,
+because some versions of Acrobat can't handle the short escapes.
+
+This commit just processes the '\\' properly, as per the other
+escapes.
+---
+ devices/vector/gdevpdfm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/devices/vector/gdevpdfm.c b/devices/vector/gdevpdfm.c
+index c32c1a9..bf64a1b 100644
+--- a/devices/vector/gdevpdfm.c
++++ b/devices/vector/gdevpdfm.c
+@@ -670,6 +670,12 @@ pdfmark_put_ao_pairs(gx_device_pdf * pdev, cos_dict_t *pcd,
+                             buf0[j++] = '1';
+                             i++;
+                             break;
++                        case '\\':
++                            buf0[j++] = '1';
++                            buf0[j++] = '3';
++                            buf0[j++] = '4';
++                            i++;
++                            break;
+                         default:
+                             break;
+                     }
+-- 
+2.9.1
+

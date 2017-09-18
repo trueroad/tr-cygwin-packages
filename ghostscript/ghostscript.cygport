@@ -1,6 +1,6 @@
 NAME="ghostscript"
 VERSION=9.21
-RELEASE=0
+RELEASE=1
 CATEGORY="Graphics"
 SUMMARY="GPL PostScript interpreter"
 DESCRIPTION="GNU Ghostscript is a Postscript interpreter capable of converting PS
@@ -16,6 +16,7 @@ PATCH_URI="
   bug697799-2.patch
   bug697846.patch
   bug697892.patch
+  bug698552.patch
   ghostscript-unixlpr.patch
 "
 
