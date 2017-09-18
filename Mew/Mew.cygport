@@ -1,5 +1,5 @@
 NAME="Mew"
-VERSION="6.6.20161224"
+VERSION="6.7.20170719"
 RELEASE=1
 
 HOMEPAGE="
@@ -7,7 +7,7 @@ HOMEPAGE="
 "
 
 GIT_URI="https://github.com/kazu-yamamoto/Mew.git"
-GIT_REV="8138c83339071884a2d6c5365a088ba8da4a0fc0"
+GIT_REV="36b36a154dab22e112cc19675cfd73478f2a5956"
 inherit git
 
 PATCH_URI="mew-hyperestraier-order.patch"
