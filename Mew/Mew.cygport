@@ -58,3 +58,5 @@ PKG_CONTENTS[2]="
 PKG_CONTENTS[3]="
 	usr/share/emacs/
 "
+
+Mew_REQUIRES="Mew-bin Mew-el"
