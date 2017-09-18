@@ -1,5 +1,5 @@
---- ./configure.ac.orig	2017-02-03 23:34:30.000000000 +0900
-+++ ./configure.ac	2017-04-22 12:06:13.236144500 +0900
+--- ./configure.ac.orig	2017-09-12 01:55:00.000000000 +0900
++++ ./configure.ac	2017-09-13 21:00:09.797219300 +0900
 @@ -355,6 +355,8 @@
  OPTION_DEFAULT_ON([zlib],[don't compile with zlib decompression support])
  OPTION_DEFAULT_OFF([modules],[compile with dynamic modules support])
@@ -42,8 +42,8 @@
    Does Emacs use toolkit scroll bars?                     ${USE_TOOLKIT_SCROLL_BARS}
    Does Emacs support Xwidgets (requires gtk3)?            ${HAVE_XWIDGETS}
  "])
---- /dev/null	2017-04-22 12:06:13.000000000 +0900
-+++ ./site-lisp/cmigemo.el	2017-04-22 12:06:13.241155100 +0900
+--- /dev/null	2017-09-13 21:00:11.000000000 +0900
++++ ./site-lisp/cmigemo.el	2017-09-13 21:00:09.812259400 +0900
 @@ -0,0 +1,859 @@
 +;;; migemo.el --- Japanese incremental search through dynamic pattern expansion -*- lexical-binding: t; -*-
 +
@@ -904,8 +904,8 @@
 +;; End:
 +
 +;;; migemo.el ends here
---- /dev/null	2017-04-22 12:06:13.000000000 +0900
-+++ ./src/cmigemo.c	2017-04-22 12:06:13.243159900 +0900
+--- /dev/null	2017-09-13 21:00:11.000000000 +0900
++++ ./src/cmigemo.c	2017-09-13 21:00:09.819265500 +0900
 @@ -0,0 +1,457 @@
 +#ifdef NULL
 +#undef NULL
@@ -1364,8 +1364,8 @@
 +  defsubr(&Scmigemo_load);
 +}
 +#endif /* HAVE_CMIGEMO */
---- ./src/emacs.c.orig	2017-02-03 19:25:45.000000000 +0900
-+++ ./src/emacs.c	2017-04-22 12:06:13.245164100 +0900
+--- ./src/emacs.c.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./src/emacs.c	2017-09-13 21:00:09.824275800 +0900
 @@ -198,6 +198,10 @@
  static void sort_args (int argc, char **argv);
  static void syms_of_emacs (void);
@@ -1388,8 +1388,8 @@
        keys_of_casefiddle ();
        keys_of_cmds ();
        keys_of_buffer ();
---- ./src/Makefile.in.orig	2017-02-03 19:25:44.000000000 +0900
-+++ ./src/Makefile.in	2017-04-22 12:06:13.247168800 +0900
+--- ./src/Makefile.in.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./src/Makefile.in	2017-09-13 21:00:09.835299000 +0900
 @@ -397,7 +397,7 @@
  	region-cache.o sound.o atimer.o \
  	doprnt.o intervals.o textprop.o composite.o xml.o $(NOTIFY_OBJ) \

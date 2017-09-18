@@ -1,5 +1,5 @@
---- ./lisp/loadup.el.orig	2017-02-03 19:25:44.000000000 +0900
-+++ ./lisp/loadup.el	2017-04-22 12:06:16.454926100 +0900
+--- ./lisp/loadup.el.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./lisp/loadup.el	2017-09-13 21:00:26.320064100 +0900
 @@ -271,6 +271,7 @@
        (load "term/w32-win")
        (load "disp-table")
@@ -8,8 +8,8 @@
          (load "w32-fns")
          (load "ls-lisp")
          (load "dos-w32"))))
---- ./lisp/term/w32-win.el.orig	2017-02-03 19:25:44.000000000 +0900
-+++ ./lisp/term/w32-win.el	2017-04-22 12:06:16.457932600 +0900
+--- ./lisp/term/w32-win.el.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./lisp/term/w32-win.el	2017-09-13 21:00:26.329083600 +0900
 @@ -271,6 +271,8 @@
         '(gdk-pixbuf "libgdk_pixbuf-2.0-0.dll")
         '(glib "libglib-2.0-0.dll")
@@ -19,8 +19,8 @@
         (if (>= libgnutls-version 30400)
  	   '(gnutls "libgnutls-30.dll")
  	 '(gnutls "libgnutls-28.dll" "libgnutls-26.dll"))
---- ./src/image.c.orig	2017-02-03 19:25:45.000000000 +0900
-+++ ./src/image.c	2017-04-22 12:06:16.461933300 +0900
+--- ./src/image.c.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./src/image.c	2017-09-13 21:00:26.339104000 +0900
 @@ -8250,6 +8250,209 @@
  					    MagickPixelPacket *);
  #endif

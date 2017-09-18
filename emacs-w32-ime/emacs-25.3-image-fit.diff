@@ -1,5 +1,5 @@
---- ./lisp/image-mode.el.orig	2017-02-03 19:25:44.000000000 +0900
-+++ ./lisp/image-mode.el	2017-04-22 12:06:15.251042600 +0900
+--- ./lisp/image-mode.el.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./lisp/image-mode.el	2017-09-13 21:00:16.398061300 +0900
 @@ -680,9 +680,12 @@
  	 (edges (and (null image-transform-resize)
  		     (window-inside-pixel-edges
@@ -15,8 +15,8 @@
  	 (image (if (not edges)
  		    (create-image file-or-data type data-p)
  		  (create-image file-or-data type data-p
---- ./lisp/image.el.orig	2017-02-03 19:25:44.000000000 +0900
-+++ ./lisp/image.el	2017-04-22 12:06:15.254049100 +0900
+--- ./lisp/image.el.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./lisp/image.el	2017-09-13 21:00:16.408082500 +0900
 @@ -126,6 +126,15 @@
    :type '(repeat (choice directory variable))
    :initialize 'custom-initialize-delay)
@@ -33,8 +33,8 @@
  
  (defun image-load-path-for-library (library image &optional path no-error)
    "Return a suitable search path for images used by LIBRARY.
---- ./lisp/startup.el.orig	2017-02-03 19:25:44.000000000 +0900
-+++ ./lisp/startup.el	2017-04-22 12:06:15.257048400 +0900
+--- ./lisp/startup.el.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./lisp/startup.el	2017-09-13 21:00:16.417101400 +0900
 @@ -1685,7 +1685,7 @@
  (defun fancy-splash-head ()
    "Insert the head part of the splash screen into the current buffer."
@@ -44,8 +44,8 @@
  	 (image-width (and img (car (image-size img))))
  	 (window-width (window-width)))
      (when img
---- ./src/image.c.orig	2017-02-03 19:25:45.000000000 +0900
-+++ ./src/image.c	2017-04-22 12:06:15.261057100 +0900
+--- ./src/image.c.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./src/image.c	2017-09-13 21:00:16.431130700 +0900
 @@ -588,6 +588,102 @@
    return p;
  }

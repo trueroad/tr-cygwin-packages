@@ -1,5 +1,5 @@
---- ./configure.ac.orig	2017-02-03 23:34:30.000000000 +0900
-+++ ./configure.ac	2017-04-22 12:06:14.179450300 +0900
+--- ./configure.ac.orig	2017-09-12 01:55:00.000000000 +0900
++++ ./configure.ac	2017-09-13 21:00:13.353677900 +0900
 @@ -2382,7 +2382,7 @@
  
  ### Use -lrsvg-2 if available, unless '--with-rsvg=no' is specified.
@@ -9,8 +9,8 @@
    if test "${with_rsvg}" != "no"; then
      RSVG_REQUIRED=2.11.0
      RSVG_MODULE="librsvg-2.0 >= $RSVG_REQUIRED"
---- ./src/image.c.orig	2017-02-03 19:25:45.000000000 +0900
-+++ ./src/image.c	2017-04-22 12:06:14.183459000 +0900
+--- ./src/image.c.orig	2017-04-15 00:02:47.000000000 +0900
++++ ./src/image.c	2017-09-13 21:00:13.364700900 +0900
 @@ -9907,7 +9907,7 @@
  #if defined (HAVE_RSVG)
    DEFSYM (Qsvg, "svg");
