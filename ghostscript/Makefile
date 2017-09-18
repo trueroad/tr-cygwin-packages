@@ -1,9 +1,9 @@
 NAME = ghostscript
-VERSION = 9.21
-RELEASE = 1
+VERSION = 9.22rc1
+RELEASE = 0
 
 CYGPORT_FILE = ${PN}.cygport
-FETCH_FILES = ${PN}-${PV}.tar.xz
+FETCH_FILES = ${PN}-${PV}.tar.gz
 
 DEPTH = ..
 include $(DEPTH)/packages.make
