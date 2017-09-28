@@ -1,5 +1,5 @@
 NAME = ghostscript
-VERSION = 9.22rc1
+VERSION = 9.22rc2
 RELEASE = 0
 
 CYGPORT_FILE = ${PN}.cygport
