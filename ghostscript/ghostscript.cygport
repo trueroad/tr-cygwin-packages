@@ -1,5 +1,5 @@
 NAME="ghostscript"
-VERSION=9.22rc2
+VERSION=9.22
 RELEASE=0
 CATEGORY="Graphics"
 SUMMARY="GPL PostScript interpreter"
@@ -10,7 +10,7 @@ ORIG_PN="ghostscript"
 GENTOO_PN="ghostscript-gpl"
 
 HOMEPAGE="http://ghostscript.com/"
-SRC_URI="https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs`echo ${VERSION} | sed 's/\.//'`/${NAME}-${VERSION}.tar.gz"
+SRC_URI="https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs`echo ${VERSION} | sed 's/\.//'`/${NAME}-${VERSION}.tar.xz"
 PATCH_URI="
   ghostscript-unixlpr.patch
 "
