@@ -1,6 +1,6 @@
 NAME="fontconfig"
-VERSION=2.12.6
-RELEASE=1
+VERSION=2.13.0
+RELEASE=0
 CATEGORY="Libs"
 SUMMARY="Font configuration library"
 DESCRIPTION="Fontconfig is a library designed to provide system-wide font
@@ -33,6 +33,8 @@ libfontconfig_common_CONTENTS="
 	etc/preremove/${NAME}_dtd.sh
 	usr/share/doc/
 	usr/share/${NAME}
+	usr/share/gettext/
+	usr/share/locale/
 	usr/share/man/man5/
 	usr/share/xml/
 	var/cache/${NAME}/
