@@ -1,0 +1,105 @@
+NAME="fontconfig"
+VERSION=2.12.6
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="Font configuration library"
+DESCRIPTION="Fontconfig is a library designed to provide system-wide font
+configuration, customization and application access."
+HOMEPAGE="http://www.freedesktop.org/wiki/Software/fontconfig"
+SRC_URI="http://www.freedesktop.org/software/fontconfig/release/${NAME}-${VERSION}.tar.bz2"
+
+PKG_NAMES="${NAME} ${NAME}-doc lib${NAME}1 lib${NAME}-common lib${NAME}-devel"
+fontconfig_CATEGORY="X11"
+fontconfig_SUMMARY="${SUMMARY% *} utilities"
+fontconfig_CONTENTS="
+	usr/bin/fc-*
+	usr/share/man/man1/
+"
+fontconfig_doc_CATEGORY="Doc"
+fontconfig_doc_SUMMARY="${SUMMARY} (API documentation)"
+fontconfig_doc_CONTENTS="usr/share/doc/${NAME}/fontconfig-[du]* usr/share/man/man3/"
+# at least one font is needed at runtime and dejavu seems to be the best choice
+libfontconfig1_REQUIRES="dejavu-fonts libfontconfig-common"
+libfontconfig1_CONTENTS="
+	etc/postinstall/zp_${NAME}_cache_1.sh
+	etc/preremove/${NAME}_cache_1.sh
+	usr/bin/cygfontconfig-1.dll
+	usr/libexec/fc-cache-1.exe
+"
+libfontconfig_common_CONTENTS="
+	--exclude=html --exclude=fontconfig-devel* --exclude=fontconfig-user*
+	etc/fonts/
+	etc/postinstall/${NAME}_dtd.sh
+	etc/preremove/${NAME}_dtd.sh
+	usr/share/doc/
+	usr/share/${NAME}
+	usr/share/man/man5/
+	usr/share/xml/
+	var/cache/${NAME}/
+"
+libfontconfig_devel_CONTENTS="usr/include/ usr/lib/"
+
+DISTCLEANFILES="src/fcobjshash.gperf src/fcobjshash.h"
+
+CYGCONF_ARGS="
+	--enable-docs
+	--with-docdir=/usr/share/doc/${NAME}
+	--with-default-fonts=/usr/share/fonts
+	--with-add-fonts=/usr/share/X11/fonts/Type1,/usr/share/X11/fonts/TTF,/usr/share/ghostscript/fonts,/usr/local/share/fonts
+"
+
+src_install() {
+	local f cachesuf
+	local msfontsdir=/usr/share/fonts/microsoft
+	local dtddir=/usr/share/xml/fontconfig
+
+	cd ${B}
+	cyginstall
+
+	exeinto /usr/libexec
+	newexe ${D}/usr/bin/fc-cache.exe fc-cache-1.exe
+
+	cd ${S}
+	doman fc-*/fc-*.1
+	doman doc/*.3
+	doman doc/*.5
+	dodoc doc/*.txt
+
+	keepdir /var/cache/${NAME}
+	cachesuf=$(strings ${D}/usr/bin/cygfontconfig-1.dll | grep -F '.cache-')
+
+	dodir /etc/postinstall /etc/preremove
+
+	cat > ${D}/etc/postinstall/zp_fontconfig_cache_1.sh <<_EOF
+mkdir -p $msfontsdir
+# remove any broken links (-L -type l together)
+/usr/bin/find -L $msfontsdir -type l -delete
+
+/usr/bin/find "\`cygpath -W\`"/Fonts/ -name '*.ttf' -exec grep -FlZ 'Microsoft Corp' '{}' + | \
+while read -d $'\0' f
+do
+	if [ ! -e "$msfontsdir/\${f##*/}" ]
+	then
+		ln -s "\$f" $msfontsdir/
+	fi
+done
+
+/usr/libexec/fc-cache-1 -s || :
+_EOF
+
+	cat > ${D}/etc/preremove/fontconfig_cache_1.sh <<_EOF
+rm -f /var/cache/fontconfig/*${cachesuf}
+_EOF
+
+	cat > ${D}/etc/postinstall/fontconfig_dtd.sh <<_EOF
+if [ -x /usr/bin/xmlcatalog ] ; then
+    /usr/bin/xmlcatalog --noout --add "system" "fonts.dtd" ${dtddir}/fonts.dtd /etc/xml/catalog
+fi
+_EOF
+
+	cat > ${D}/etc/preremove/fontconfig_dtd.sh <<_EOF
+if [ -x /usr/bin/xmlcatalog ] ; then
+    /usr/bin/xmlcatalog --noout --del ${dtddir}/fonts.dtd /etc/xml/catalog
+fi
+_EOF
+}
