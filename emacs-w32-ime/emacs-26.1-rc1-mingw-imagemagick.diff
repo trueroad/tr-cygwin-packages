@@ -1,6 +1,6 @@
---- ./lisp/loadup.el.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./lisp/loadup.el	2017-09-13 21:00:26.320064100 +0900
-@@ -271,6 +271,7 @@
+--- ./lisp/loadup.el.orig	2018-01-09 05:23:57.000000000 +0900
++++ ./lisp/loadup.el	2018-04-10 23:10:38.764782700 +0900
+@@ -284,6 +284,7 @@
        (load "term/w32-win")
        (load "disp-table")
        (when (eq system-type 'windows-nt)
@@ -8,20 +8,22 @@
          (load "w32-fns")
          (load "ls-lisp")
          (load "dos-w32"))))
---- ./lisp/term/w32-win.el.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./lisp/term/w32-win.el	2017-09-13 21:00:26.329083600 +0900
-@@ -271,6 +271,8 @@
+--- ./lisp/term/w32-win.el.orig	2018-01-09 05:23:57.000000000 +0900
++++ ./lisp/term/w32-win.el	2018-04-10 23:10:38.774804800 +0900
+@@ -271,6 +271,10 @@
         '(gdk-pixbuf "libgdk_pixbuf-2.0-0.dll")
         '(glib "libglib-2.0-0.dll")
         '(gobject "libgobject-2.0-0.dll")
-+       '(magickwand "libMagickWand-6.Q16HDRI-2.dll" "libMagickWand-6.Q16-2.dll")
-+       '(magickcore "libMagickCore-6.Q16HDRI-2.dll" "libMagickCore-6.Q16-2.dll")
++       '(magickwand "libMagickWand-6.Q16HDRI-5.dll" "libMagickWand-6.Q16-5.dll"
++                    "libMagickWand-6.Q16HDRI-2.dll" "libMagickWand-6.Q16-2.dll")
++       '(magickcore "libMagickCore-6.Q16HDRI-5.dll" "libMagickCore-6.Q16-5.dll"
++                    "libMagickCore-6.Q16HDRI-2.dll" "libMagickCore-6.Q16-2.dll")
         (if (>= libgnutls-version 30400)
  	   '(gnutls "libgnutls-30.dll")
  	 '(gnutls "libgnutls-28.dll" "libgnutls-26.dll"))
---- ./src/image.c.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/image.c	2017-09-13 21:00:26.339104000 +0900
-@@ -8250,6 +8250,209 @@
+--- ./src/image.c.orig	2018-03-13 00:59:18.000000000 +0900
++++ ./src/image.c	2018-04-10 23:10:38.786831200 +0900
+@@ -8280,6 +8280,231 @@
  					    MagickPixelPacket *);
  #endif
  
@@ -30,6 +32,9 @@
 +DEF_DLL_FN (MagickWand *, DestroyMagickWand, (MagickWand *));
 +DEF_DLL_FN (MagickWand *, DestroyPixelIterator, (PixelIterator *));
 +DEF_DLL_FN (PixelWand *, DestroyPixelWand, (PixelWand *));
++#ifdef HAVE_MAGICKAUTOORIENTIMAGE
++DEF_DLL_FN (MagickBooleanType, MagickAutoOrientImage, (MagickWand *));
++#endif
 +DEF_DLL_FN (MagickBooleanType, MagickCropImage, (MagickWand *, const size_t, const size_t, const ssize_t, const ssize_t));
 +#ifdef HAVE_MAGICKEXPORTIMAGEPIXELS
 +DEF_DLL_FN (MagickBooleanType, MagickExportImagePixels, (MagickWand *, const ssize_t, const ssize_t, const size_t, const size_t, const char *, const StorageType, void *));
@@ -53,9 +58,11 @@
 +DEF_DLL_FN (void *, MagickRelinquishMemory, (void *));
 +DEF_DLL_FN (MagickBooleanType, MagickRotateImage, (MagickWand *, const PixelWand *, const double));
 +DEF_DLL_FN (MagickBooleanType, MagickScaleImage, (MagickWand *, const size_t, const size_t));
++DEF_DLL_FN (MagickBooleanType, MagickSetDepth, (MagickWand *, const size_t));
 +DEF_DLL_FN (MagickBooleanType, MagickSetFilename, (MagickWand *, const char *));
 +DEF_DLL_FN (MagickBooleanType, MagickSetImageBackgroundColor, (MagickWand *, const PixelWand *));
 +DEF_DLL_FN (MagickBooleanType, MagickSetIteratorIndex, (MagickWand *, const ssize_t));
++DEF_DLL_FN (MagickBooleanType, MagickSetSize, (MagickWand *, const size_t, const size_t));
 +DEF_DLL_FN (void, MagickWandGenesis, (void));
 +DEF_DLL_FN (void, MagickWandTerminus, (void));
 +DEF_DLL_FN (MagickWand *, NewMagickWand, (void));
@@ -89,6 +96,9 @@
 +  LOAD_DLL_FN (magickwand, DestroyMagickWand);
 +  LOAD_DLL_FN (magickwand, DestroyPixelIterator);
 +  LOAD_DLL_FN (magickwand, DestroyPixelWand);
++#ifdef HAVE_MAGICKAUTOORIENTIMAGE
++  LOAD_DLL_FN (magickwand, MagickAutoOrientImage);
++#endif
 +  LOAD_DLL_FN (magickwand, MagickCropImage);
 +#ifdef HAVE_MAGICKEXPORTIMAGEPIXELS
 +  LOAD_DLL_FN (magickwand, MagickExportImagePixels);
@@ -112,9 +122,11 @@
 +  LOAD_DLL_FN (magickwand, MagickRelinquishMemory);
 +  LOAD_DLL_FN (magickwand, MagickRotateImage);
 +  LOAD_DLL_FN (magickwand, MagickScaleImage);
++  LOAD_DLL_FN (magickwand, MagickSetDepth);
 +  LOAD_DLL_FN (magickwand, MagickSetFilename);
 +  LOAD_DLL_FN (magickwand, MagickSetImageBackgroundColor);
 +  LOAD_DLL_FN (magickwand, MagickSetIteratorIndex);
++  LOAD_DLL_FN (magickwand, MagickSetSize);
 +  LOAD_DLL_FN (magickwand, MagickWandGenesis);
 +  LOAD_DLL_FN (magickwand, MagickWandTerminus);
 +  LOAD_DLL_FN (magickwand, NewMagickWand);
@@ -142,6 +154,7 @@
 +#undef DestroyMagickWand
 +#undef DestroyPixelIterator
 +#undef DestroyPixelWand
++#undef MagickAutoOrientImage
 +#undef MagickCropImage
 +#undef MagickExportImagePixels
 +#undef MagickGetException
@@ -153,16 +166,21 @@
 +#undef MagickGetImageSignature
 +#undef MagickGetImageWidth
 +#undef MagickGetNumberImages
++#ifdef HAVE_MAGICKMERGEIMAGELAYERS
 +#undef MagickMergeImageLayers
++#else
 +#undef MagickFlattenImages
++#endif
 +#undef MagickReadImage
 +#undef MagickReadImageBlob
 +#undef MagickRelinquishMemory
 +#undef MagickRotateImage
 +#undef MagickScaleImage
++#undef MagickSetDepth
 +#undef MagickSetFilename
 +#undef MagickSetImageBackgroundColor
 +#undef MagickSetIteratorIndex
++#undef MagickSetSize
 +#undef MagickWandGenesis
 +#undef MagickWandTerminus
 +#undef NewMagickWand
@@ -186,6 +204,7 @@
 +#define DestroyMagickWand fn_DestroyMagickWand
 +#define DestroyPixelIterator fn_DestroyPixelIterator
 +#define DestroyPixelWand fn_DestroyPixelWand
++#define MagickAutoOrientImage fn_MagickAutoOrientImage
 +#define MagickCropImage fn_MagickCropImage
 +#define MagickExportImagePixels fn_MagickExportImagePixels
 +#define MagickGetException fn_MagickGetException
@@ -197,16 +216,21 @@
 +#define MagickGetImageSignature fn_MagickGetImageSignature
 +#define MagickGetImageWidth fn_MagickGetImageWidth
 +#define MagickGetNumberImages fn_MagickGetNumberImages
++#ifdef HAVE_MAGICKMERGEIMAGELAYERS
 +#define MagickMergeImageLayers fn_MagickMergeImageLayers
++#else
 +#define MagickFlattenImages fn_MagickFlattenImages
++#endif
 +#define MagickReadImage fn_MagickReadImage
 +#define MagickReadImageBlob fn_MagickReadImageBlob
 +#define MagickRelinquishMemory fn_MagickRelinquishMemory
 +#define MagickRotateImage fn_MagickRotateImage
 +#define MagickScaleImage fn_MagickScaleImage
++#define MagickSetDepth fn_MagickSetDepth
 +#define MagickSetFilename fn_MagickSetFilename
 +#define MagickSetImageBackgroundColor fn_MagickSetImageBackgroundColor
 +#define MagickSetIteratorIndex fn_MagickSetIteratorIndex
++#define MagickSetSize fn_MagickSetSize
 +#define MagickWandGenesis fn_MagickWandGenesis
 +#define MagickWandTerminus fn_MagickWandTerminus
 +#define NewMagickWand fn_NewMagickWand
@@ -229,9 +253,9 @@
 +#endif /* !WINDOWSNT */
 +
  /* Log ImageMagick error message.
-    Useful when a ImageMagick function returns the status `MagickFalse'.  */
+    Useful when an ImageMagick function returns the status `MagickFalse'.  */
  
-@@ -8889,6 +9092,11 @@
+@@ -8945,6 +9170,11 @@
    char **imtypes;
    size_t i;
  
@@ -243,7 +267,7 @@
    ex = AcquireExceptionInfo ();
    imtypes = GetMagickList ("*", &numf, ex);
    DestroyExceptionInfo (ex);
-@@ -9902,6 +10110,10 @@
+@@ -9959,6 +10189,10 @@
  #if defined (HAVE_IMAGEMAGICK)
    DEFSYM (Qimagemagick, "imagemagick");
    ADD_IMAGE_TYPE (Qimagemagick);

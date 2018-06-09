@@ -1,6 +1,6 @@
---- ./lisp/image-mode.el.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./lisp/image-mode.el	2017-09-13 21:00:16.398061300 +0900
-@@ -680,9 +680,12 @@
+--- ./lisp/image-mode.el.orig	2018-01-09 05:23:57.000000000 +0900
++++ ./lisp/image-mode.el	2018-04-10 23:10:36.891658700 +0900
+@@ -758,9 +758,12 @@
  	 (edges (and (null image-transform-resize)
  		     (window-inside-pixel-edges
  		      (get-buffer-window (current-buffer)))))
@@ -15,11 +15,11 @@
  	 (image (if (not edges)
  		    (create-image file-or-data type data-p)
  		  (create-image file-or-data type data-p
---- ./lisp/image.el.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./lisp/image.el	2017-09-13 21:00:16.408082500 +0900
-@@ -126,6 +126,15 @@
-   :type '(repeat (choice directory variable))
-   :initialize 'custom-initialize-delay)
+--- ./lisp/image.el.orig	2018-03-13 00:59:18.000000000 +0900
++++ ./lisp/image.el	2018-04-10 23:10:36.903685400 +0900
+@@ -240,6 +240,15 @@
+     (nconc (list image-directory)
+            (delete image-directory (copy-sequence (or path load-path))))))
  
 +;;;###autoload
 +(defcustom image-fit-option-alist nil
@@ -31,11 +31,11 @@
 +  :initialize 'custom-initialize-default
 +  :group 'image)
  
- (defun image-load-path-for-library (library image &optional path no-error)
-   "Return a suitable search path for images used by LIBRARY.
---- ./lisp/startup.el.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./lisp/startup.el	2017-09-13 21:00:16.417101400 +0900
-@@ -1685,7 +1685,7 @@
+ ;; Used to be in image-type-header-regexps, but now not used anywhere
+ ;; (since 2009-08-28).
+--- ./lisp/startup.el.orig	2018-03-13 00:59:18.000000000 +0900
++++ ./lisp/startup.el	2018-04-10 23:10:36.916713800 +0900
+@@ -1689,7 +1689,7 @@
  (defun fancy-splash-head ()
    "Insert the head part of the splash screen into the current buffer."
    (let* ((image-file (fancy-splash-image-file))
@@ -44,9 +44,9 @@
  	 (image-width (and img (car (image-size img))))
  	 (window-width (window-width)))
      (when img
---- ./src/image.c.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/image.c	2017-09-13 21:00:16.431130700 +0900
-@@ -588,6 +588,102 @@
+--- ./src/image.c.orig	2018-03-13 00:59:18.000000000 +0900
++++ ./src/image.c	2018-04-10 23:10:36.930744900 +0900
+@@ -594,6 +594,102 @@
    return p;
  }
  
@@ -149,16 +149,7 @@
  
  /* Value is true if OBJECT is a valid Lisp image specification.  A
     valid image specification is a list whose car is the symbol
-@@ -3159,6 +3255,8 @@
- #define XImage xpm_XImage
- #define Display xpm_Display
- #define PIXEL_ALREADY_TYPEDEFED
-+#undef close
-+#undef open
- #include "X11/xpm.h"
- #undef FOR_MSW
- #undef XColor
-@@ -6683,6 +6781,10 @@
+@@ -6708,6 +6804,10 @@
  #ifndef USE_CAIRO
    XImagePtr ximg = NULL;
  #endif
@@ -169,7 +160,7 @@
  
    /* Open the JPEG file.  */
    specified_file = image_spec_value (img->spec, QCfile, NULL);
-@@ -6766,6 +6868,43 @@
+@@ -6787,6 +6887,43 @@
  
    jpeg_read_header (&mgr->cinfo, 1);
  
@@ -213,20 +204,7 @@
    /* Customize decompression so that color quantization will be used.
  	 Start decompression.  */
    mgr->cinfo.quantize_colors = 1;
-@@ -8835,6 +8974,12 @@
- {
-   bool success_p = 0;
-   Lisp_Object file_name;
-+  int w, h;
-+
-+#if 0
-+  if (lookup_fit_size(Qjpeg, NULL, NULL, NULL, NULL, !0) < 0)
-+    return 0;
-+#endif
- 
-   /* If IMG->spec specifies a file name, create a non-file spec from it.  */
-   file_name = image_spec_value (img->spec, QCfile, NULL);
-@@ -9023,6 +9168,7 @@
+@@ -9082,6 +9219,7 @@
  	    (RsvgHandle *, const guchar *, gsize, GError **));
  DEF_DLL_FN (gboolean, rsvg_handle_close, (RsvgHandle *, GError **));
  DEF_DLL_FN (GdkPixbuf *, rsvg_handle_get_pixbuf, (RsvgHandle *));
@@ -234,7 +212,7 @@
  DEF_DLL_FN (void, rsvg_handle_set_base_uri, (RsvgHandle *, const char *));
  
  DEF_DLL_FN (int, gdk_pixbuf_get_width, (const GdkPixbuf *));
-@@ -9061,6 +9207,7 @@
+@@ -9120,6 +9258,7 @@
    LOAD_DLL_FN (library, rsvg_handle_write);
    LOAD_DLL_FN (library, rsvg_handle_close);
    LOAD_DLL_FN (library, rsvg_handle_get_pixbuf);
@@ -242,7 +220,7 @@
    LOAD_DLL_FN (library, rsvg_handle_set_base_uri);
  
    LOAD_DLL_FN (gdklib, gdk_pixbuf_get_width);
-@@ -9098,6 +9245,7 @@
+@@ -9157,6 +9296,7 @@
  #  undef rsvg_handle_close
  #  undef rsvg_handle_get_dimensions
  #  undef rsvg_handle_get_pixbuf
@@ -250,7 +228,7 @@
  #  undef rsvg_handle_new
  #  undef rsvg_handle_set_base_uri
  #  undef rsvg_handle_write
-@@ -9116,6 +9264,7 @@
+@@ -9177,6 +9317,7 @@
  #  define rsvg_handle_close fn_rsvg_handle_close
  #  define rsvg_handle_get_dimensions fn_rsvg_handle_get_dimensions
  #  define rsvg_handle_get_pixbuf fn_rsvg_handle_get_pixbuf
@@ -258,7 +236,7 @@
  #  define rsvg_handle_new fn_rsvg_handle_new
  #  define rsvg_handle_set_base_uri fn_rsvg_handle_set_base_uri
  #  define rsvg_handle_write fn_rsvg_handle_write
-@@ -9177,6 +9326,48 @@
+@@ -9238,6 +9379,48 @@
    return success_p;
  }
  
@@ -304,10 +282,10 @@
 +  }
 +}
 +
- /* svg_load_image is a helper function for svg_load, which does the
-    actual loading given contents and size, apart from frame and image
-    structures, passed from svg_load.
-@@ -9199,6 +9390,10 @@
+ /* Load frame F and image IMG.  CONTENTS contains the SVG XML data to
+    be parsed, SIZE is its size, and FILENAME is the name of the SVG
+    file being loaded.
+@@ -9257,6 +9440,10 @@
    int height;
    const guint8 *pixels;
    int rowstride;
@@ -318,7 +296,7 @@
  
  #if ! GLIB_CHECK_VERSION (2, 36, 0)
    /* g_type_init is a glib function that must be called prior to
-@@ -9215,6 +9410,9 @@
+@@ -9273,6 +9460,9 @@
    if (filename)
      rsvg_handle_set_base_uri(rsvg_handle, filename);
  
@@ -326,17 +304,17 @@
 +    rsvg_handle_set_size_callback(rsvg_handle, rsvg_size_callback, fit_size, NULL);
 +
    /* Parse the contents argument and fill in the rsvg_handle.  */
-   rsvg_handle_write (rsvg_handle, contents, size, &err);
+   rsvg_handle_write (rsvg_handle, (unsigned char *) contents, size, &err);
    if (err) goto rsvg_error;
-@@ -9818,6 +10016,7 @@
-   DEFSYM (QCmatrix, ":matrix");
+@@ -9875,6 +10065,7 @@
+   DEFSYM (QCscale, ":scale");
    DEFSYM (QCcolor_adjustment, ":color-adjustment");
    DEFSYM (QCmask, ":mask");
 +  DEFSYM (QCfit, ":fit");
  
    /* Other symbols.  */
    DEFSYM (Qlaplace, "laplace");
-@@ -9868,12 +10067,24 @@
+@@ -9925,12 +10116,24 @@
  	);
  #endif
  

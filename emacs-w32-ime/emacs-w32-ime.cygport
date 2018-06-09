@@ -1,5 +1,5 @@
 NAME="emacs-w32-ime"
-VERSION="25.3"
+VERSION="26.1"
 RELEASE=1
 
 HOMEPAGE="
@@ -11,18 +11,17 @@ SRC_URI="
 	README.txt
 	postinstall.sh
 	preremove.sh
-	emacs-25.3-ImmDisableIME.diff
-	emacs-25.3-mingw-imagemagick.diff
+	emacs-26.1-rc1-ImmDisableIME.diff
+	emacs-26.1-rc1-mingw-imagemagick.diff
 "
 SRC_DIR="emacs-${PV}"
 
 PATCH_URI="
-	emacs-25.3-w32-ime.diff
-	emacs-25.3-image-fit.diff
-	emacs-25.3-cmigemo.diff
-	emacs-25.3-cygwin-rsvg.diff
-	emacs-25.3-disable-w32-ime.diff
-	emacs-https-proxy.patch
+	emacs-26.1-rc1-w32-ime.diff
+	emacs-26.1-rc1-image-fit.diff
+	emacs-26.1-rc1-cmigemo.diff
+	emacs-26.1-rc1-cygwin-rsvg.diff
+	emacs-26.1-rc1-disable-w32-ime.diff
 "
 
 DEPEND="libtiff-devel

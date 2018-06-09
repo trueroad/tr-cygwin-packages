@@ -1,6 +1,6 @@
---- ./configure.ac.orig	2017-09-12 01:55:00.000000000 +0900
-+++ ./configure.ac	2017-09-13 21:00:32.623281500 +0900
-@@ -346,6 +346,10 @@
+--- ./configure.ac.orig	2018-04-05 18:55:25.000000000 +0900
++++ ./configure.ac	2018-04-10 23:10:39.762975600 +0900
+@@ -368,6 +368,10 @@
  On by default on macOS.])],[],[with_ns=maybe])
  OPTION_DEFAULT_OFF([w32], [use native MS Windows GUI in a Cygwin build])
  
@@ -10,8 +10,8 @@
 +
  OPTION_DEFAULT_ON([gpm],[don't use -lgpm for mouse support on a GNU/Linux console])
  OPTION_DEFAULT_ON([dbus],[don't compile with D-Bus support])
- OPTION_DEFAULT_ON([gconf],[don't compile with GConf support])
-@@ -5251,6 +5255,42 @@
+ AC_ARG_WITH([gconf],[AS_HELP_STRING([--with-gconf],
+@@ -5345,6 +5349,42 @@
    ACL_SUMMARY=no
  fi
  
@@ -54,7 +54,7 @@
  emacs_standard_dirs='Standard dirs'
  AS_ECHO(["
  Configured for '${canonical}'.
-@@ -5291,6 +5331,10 @@
+@@ -5387,6 +5427,10 @@
      AS_VAR_APPEND([emacs_config_features], ["$optsep$opt"])
      optsep=' '
  done
@@ -65,8 +65,8 @@
  AC_DEFINE_UNQUOTED(EMACS_CONFIG_FEATURES, "${emacs_config_features}",
    [Summary of some of the main features enabled by configure.])
  
-@@ -5323,6 +5367,16 @@
-   Does Emacs support Xwidgets (requires gtk3)?            ${HAVE_XWIDGETS}
+@@ -5422,6 +5466,16 @@
+   Does Emacs have threading support in lisp?              ${threads_enabled}
  "])
  
 +if test "${HAVE_W32}" = "yes"; then
@@ -82,8 +82,8 @@
  if test -n "${EMACSDATA}"; then
     AS_ECHO(["  Environment variable EMACSDATA set to:                  $EMACSDATA"])
  fi
---- /dev/null	2017-09-13 21:00:35.000000000 +0900
-+++ ./lisp/international/w32-ime.el	2017-09-13 21:00:32.634304500 +0900
+--- /dev/null	2018-04-10 23:10:40.000000000 +0900
++++ ./lisp/international/w32-ime.el	2018-04-10 23:10:39.773999700 +0900
 @@ -0,0 +1,201 @@
 +;;;;; w32-ime.el ---- Meadow features for NTEmacs.
 +;;
@@ -286,8 +286,8 @@
 +		       "W32 System IME")
 +
 +(provide 'w32-ime)
---- ./lisp/language/japan-util.el.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./lisp/language/japan-util.el	2017-09-13 21:00:32.639315100 +0900
+--- ./lisp/language/japan-util.el.orig	2018-01-09 05:23:57.000000000 +0900
++++ ./lisp/language/japan-util.el	2018-04-10 23:10:39.781015100 +0900
 @@ -31,9 +31,11 @@
  (defun setup-japanese-environment-internal ()
    ;; By default, we use 'japanese-iso-8bit for file names.  But, the
@@ -302,9 +302,9 @@
    (use-cjk-char-width-table 'ja_JP))
  
  (defconst japanese-kana-table
---- ./lisp/loadup.el.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./lisp/loadup.el	2017-09-13 21:00:32.649336000 +0900
-@@ -270,6 +270,7 @@
+--- ./lisp/loadup.el.orig	2018-01-09 05:23:57.000000000 +0900
++++ ./lisp/loadup.el	2018-04-10 23:10:39.791037100 +0900
+@@ -283,6 +283,7 @@
        (load "w32-vars")
        (load "term/w32-win")
        (load "disp-table")
@@ -312,9 +312,9 @@
        (when (eq system-type 'windows-nt)
          (load "w32-fns")
          (load "ls-lisp")
---- ./lisp/startup.el.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./lisp/startup.el	2017-09-13 21:00:32.662363300 +0900
-@@ -600,6 +600,8 @@
+--- ./lisp/startup.el.orig	2018-03-13 00:59:18.000000000 +0900
++++ ./lisp/startup.el	2018-04-10 23:10:39.801059200 +0900
+@@ -596,6 +596,8 @@
      ;; `user-full-name' is now known; reset its standard-value here.
      (put 'user-full-name 'standard-value
  	 (list (default-value 'user-full-name)))
@@ -323,31 +323,31 @@
      ;; If the PWD environment variable isn't accurate, delete it.
      (let ((pwd (getenv "PWD")))
        (and (stringp pwd)
---- ./src/frame.c.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/frame.c	2017-09-13 21:00:32.677394600 +0900
-@@ -3073,6 +3073,9 @@
-   {"alpha",			SYMBOL_INDEX (Qalpha)},
-   {"sticky",			SYMBOL_INDEX (Qsticky)},
-   {"tool-bar-position",		SYMBOL_INDEX (Qtool_bar_position)},
+--- ./src/frame.c.orig	2018-03-13 00:59:18.000000000 +0900
++++ ./src/frame.c	2018-04-10 23:10:39.812083300 +0900
+@@ -3584,6 +3584,9 @@
+   {"ns-appearance",		SYMBOL_INDEX (Qns_appearance)},
+   {"ns-transparent-titlebar",	SYMBOL_INDEX (Qns_transparent_titlebar)},
+ #endif
 +#ifdef USE_W32_IME
 +  {"ime-font",			SYMBOL_INDEX (Qime_font)},
 +#endif /* USE_W32_IME */
  };
  
  #ifdef HAVE_WINDOW_SYSTEM
-@@ -5024,6 +5027,9 @@
-   DEFSYM (Qvertical_scroll_bars, "vertical-scroll-bars");
-   DEFSYM (Qvisibility, "visibility");
-   DEFSYM (Qwait_for_wm, "wait-for-wm");
+@@ -5767,6 +5770,9 @@
+   DEFSYM (Qtop_only, "top-only");
+   DEFSYM (Qiconify_top_level, "iconify-top-level");
+   DEFSYM (Qmake_invisible, "make-invisible");
 +#ifdef USE_W32_IME
 +  DEFSYM (Qime_font, "ime-font");
 +#endif /* USE_W32_IME */
  
    {
      int i;
---- ./src/keyboard.c.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/keyboard.c	2017-09-13 21:00:32.692426400 +0900
-@@ -4690,7 +4690,11 @@
+--- ./src/keyboard.c.orig	2018-03-13 00:59:18.000000000 +0900
++++ ./src/keyboard.c	2018-04-10 23:10:39.825103300 +0900
+@@ -4720,7 +4720,11 @@
      "junja",          /* VK_JUNJA          0x17 */
      "final",          /* VK_FINAL          0x18 */
      "kanji",          /* VK_KANJI/VK_HANJA 0x19 */
@@ -359,13 +359,12 @@
      "escape",         /* VK_ESCAPE         0x1B */
      "convert",        /* VK_CONVERT        0x1C */
      "non-convert",    /* VK_NONCONVERT     0x1D */
-@@ -8828,6 +8832,13 @@
+@@ -8907,6 +8911,12 @@
  {
    ptrdiff_t count = SPECPDL_INDEX ();
  
 +  /* To control IME */
 +#ifdef USE_W32_IME
-+  extern Lisp_Object Fime_force_on (), Fime_force_off (), Fime_get_mode ();
 +  Lisp_Object VIME_command_off_flag = Qnil;
 +  Lisp_Object IME_command_loop_flag = Qnil;
 +#endif /* USE_W32_IME */
@@ -373,7 +372,7 @@
    /* How many keys there are in the current key sequence.  */
    int t;
  
-@@ -8945,6 +8956,12 @@
+@@ -9024,6 +9034,12 @@
       keybuf[0..mock_input] holds the sequence we should reread.  */
   replay_sequence:
  
@@ -386,7 +385,7 @@
    starting_buffer = current_buffer;
    first_unbound = bufsize + 1;
  
-@@ -9024,6 +9041,16 @@
+@@ -9103,6 +9119,16 @@
  	  goto replay_sequence;
  	}
  
@@ -403,7 +402,7 @@
        if (t >= bufsize)
  	error ("Key sequence too long");
  
-@@ -9691,6 +9718,12 @@
+@@ -9775,6 +9801,12 @@
      ? Fcommand_remapping (read_key_sequence_cmd, Qnil, Qnil)
      : Qnil;
  
@@ -416,9 +415,9 @@
    unread_switch_frame = delayed_switch_frame;
    unbind_to (count, Qnil);
  
---- ./src/w32fns.c.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/w32fns.c	2017-09-13 21:00:32.706455700 +0900
-@@ -52,6 +52,11 @@
+--- ./src/w32fns.c.orig	2018-01-09 05:23:58.000000000 +0900
++++ ./src/w32fns.c	2018-04-10 23:10:39.839333200 +0900
+@@ -56,6 +56,11 @@
  #include "w32.h"
  #endif
  
@@ -427,10 +426,10 @@
 +#include "w32font.h"
 +#endif
 +
+ #include <basetyps.h>
+ #include <unknwn.h>
  #include <commctrl.h>
- #include <commdlg.h>
- #include <shellapi.h>
-@@ -82,6 +87,45 @@
+@@ -83,6 +88,44 @@
  #define IDC_HAND MAKEINTRESOURCE(32649)
  #endif
  
@@ -449,7 +448,6 @@
 +static int set_ime_font = 0;
 +static LOGFONT ime_logfont = {0};
 +static int IME_event_off_count;
-+Lisp_Object Fime_get_mode();
 +const char * const ImmGetOpenStatus_Name = "ImmGetOpenStatus";
 +const char * const ImmSetOpenStatus_Name = "ImmSetOpenStatus";
 +const char * const ImmSetCompositionWindow_Name = "ImmSetCompositionWindow";
@@ -476,7 +474,7 @@
  /* Prefix for system colors.  */
  #define SYSTEM_COLOR_PREFIX "System"
  #define SYSTEM_COLOR_PREFIX_LEN (sizeof (SYSTEM_COLOR_PREFIX) - 1)
-@@ -156,12 +200,14 @@
+@@ -157,12 +200,14 @@
  
  typedef BOOL (WINAPI * TrackMouseEvent_Proc)
    (IN OUT LPTRACKMOUSEEVENT lpEventTrack);
@@ -491,7 +489,7 @@
  typedef HMONITOR (WINAPI * MonitorFromPoint_Proc) (IN POINT pt, IN DWORD flags);
  typedef BOOL (WINAPI * GetMonitorInfo_Proc)
    (IN HMONITOR monitor, OUT struct MONITOR_INFO* info);
-@@ -175,10 +221,12 @@
+@@ -176,10 +221,12 @@
    (IN HWND hwnd, OUT TITLEBAR_INFO* info);
  
  TrackMouseEvent_Proc track_mouse_event_fn = NULL;
@@ -504,12 +502,12 @@
  MonitorFromPoint_Proc monitor_from_point_fn = NULL;
  GetMonitorInfo_Proc get_monitor_info_fn = NULL;
  MonitorFromWindow_Proc monitor_from_window_fn = NULL;
-@@ -191,8 +239,13 @@
+@@ -188,8 +235,13 @@
+ 
  extern AppendMenuW_Proc unicode_append_menu;
- #endif /* NTGUI_UNICODE */
  
 +#ifdef USE_W32_IME
-+/* Flag for indicating in conversion.  */
++/* Flag for indicating in conversion in IME.  */
 +int ime_in_conversion = 0;
 +#else
  /* Flag to selectively ignore WM_IME_CHAR messages.  */
@@ -518,7 +516,7 @@
  
  /* W95 mousewheel handler */
  unsigned int msh_mousewheel = 0;
-@@ -759,6 +812,17 @@
+@@ -793,6 +845,15 @@
    return ret;
  }
  
@@ -527,29 +525,27 @@
 +static void w32_set_ime_status (HWND, int);
 +static int w32_get_ime_status (HWND);
 +static int w32_set_ime_mode (HWND, int, int);
-+void w32_set_ime_logfont (HWND, struct frame *);
 +static void w32_set_ime_font (HWND);
 +static BOOL w32_get_ime_composition_string (HWND);
 +static LRESULT CALLBACK conversion_agent_wndproc (HWND, UINT, WPARAM, LPARAM);
-+static int initialize_conversion_agent (void);
 +#endif /* USE_W32_IME */
  
  static void
  add_system_logical_colors_to_map (Lisp_Object *system_colors)
-@@ -2042,6 +2106,8 @@
+@@ -2382,6 +2443,8 @@
  
    if (hwnd)
      {
 +      static int initialized = 0;
 +
-       SetWindowLong (hwnd, WND_FONTWIDTH_INDEX, FRAME_COLUMN_WIDTH (f));
-       SetWindowLong (hwnd, WND_LINEHEIGHT_INDEX, FRAME_LINE_HEIGHT (f));
-       SetWindowLong (hwnd, WND_BORDER_INDEX, FRAME_INTERNAL_BORDER_WIDTH (f));
-@@ -2049,6 +2115,12 @@
+       if (FRAME_SKIP_TASKBAR (f))
+ 	SetWindowLong (hwnd, GWL_EXSTYLE,
+ 		       GetWindowLong (hwnd, GWL_EXSTYLE) | WS_EX_NOACTIVATE);
+@@ -2393,6 +2456,12 @@
        SetWindowLong (hwnd, WND_HSCROLLBAR_INDEX, FRAME_SCROLL_BAR_AREA_HEIGHT (f));
        SetWindowLong (hwnd, WND_BACKGROUND_INDEX, FRAME_BACKGROUND_PIXEL (f));
  
-+      if (!initialized && (w32_major_version > 6 || w32_major_version == 6 && w32_minor_version >= 2))
++      if (!initialized && (w32_major_version > 6 || (w32_major_version == 6 && w32_minor_version >= 2)))
 +        {
 +          ShowWindow (hwnd, SW_MINIMIZE); ShowWindow (hwnd, SW_RESTORE);
 +          initialized = 1;
@@ -558,7 +554,7 @@
        /* Enable drag-n-drop.  */
        DragAcceptFiles (hwnd, TRUE);
  
-@@ -3702,6 +3774,24 @@
+@@ -4413,6 +4482,24 @@
  	  TranslateMessage (&windows_msg);
  	  goto dflt;
  	}
@@ -580,10 +576,10 @@
 +	    }
 +	}
 +#endif
- 
        /* Fall through */
+       FALLTHROUGH;
  
-@@ -3721,6 +3811,7 @@
+@@ -4432,6 +4519,7 @@
  				w32_get_key_modifiers (wParam, lParam));
        break;
  
@@ -591,7 +587,7 @@
      case WM_UNICHAR:
        /* WM_UNICHAR looks promising from the docs, but the exact
  	 circumstances in which TranslateMessage sends it is one of those
-@@ -3845,6 +3936,7 @@
+@@ -4556,6 +4644,7 @@
      case WM_IME_ENDCOMPOSITION:
        ignore_ime_char = 0;
        goto dflt;
@@ -599,7 +595,7 @@
  
        /* Simulate middle mouse button events when left and right buttons
  	 are used together, but only if user has two button mouse. */
-@@ -4593,8 +4685,87 @@
+@@ -5374,8 +5463,89 @@
      case WM_EMACS_FILENOTIFY:
        my_post_msg (&wmsg, hwnd, msg, wParam, lParam);
        return 1;
@@ -643,10 +639,12 @@
 +
 +    case WM_IME_COMPOSITION:
 +      if (lParam & GCS_RESULTSTR)
-+        if (w32_get_ime_composition_string (hwnd))
-+	  return 0;
-+	else
-+	  break;
++	{
++	  if (w32_get_ime_composition_string (hwnd))
++	    return 0;
++	  else
++	    break;
++	}
 +      goto dflt;
 +
 +#ifdef RECONVERSION
@@ -687,8 +685,8 @@
        /* Check for messages registered at runtime. */
        if (msg == msh_mousewheel)
  	{
-@@ -4883,6 +5054,10 @@
-       x_set_frame_parameters (f, Fcons (Fcons (Qfont_param, font_param), Qnil));
+@@ -5666,6 +5836,10 @@
+ 					Qnil));
      }
    x_default_parameter (f, parms, Qfont, font, "font", "Font", RES_TYPE_STRING);
 +#ifdef USE_W32_IME
@@ -698,7 +696,7 @@
  }
  
  DEFUN ("x-create-frame", Fx_create_frame, Sx_create_frame,
-@@ -7297,6 +7472,1017 @@
+@@ -8151,6 +8325,992 @@
  
  
  /***********************************************************************
@@ -774,9 +772,7 @@
 +// Lisp_Object Vime_control;
 + 
 +static void
-+w32_set_ime_conv_window (hwnd, f)
-+     HWND hwnd;
-+     struct frame *f;
++w32_set_ime_conv_window (HWND hwnd, struct frame *f)
 +{
 +  if (fIME && !NILP (Vime_control))
 +    {
@@ -787,8 +783,8 @@
 +      /* If Vw32_ime_composition_window is set, try it. */
 +      if (!NILP (Vw32_ime_composition_window)
 +	  && WINDOWP (Vw32_ime_composition_window)
-+	  && WINDOW_FRAME (XWINDOW (Vw32_ime_composition_window))
-+	  == WINDOW_FRAME (w))
++	  && EQ (WINDOW_FRAME (XWINDOW (Vw32_ime_composition_window)),
++		 WINDOW_FRAME (w)))
 +	w = XWINDOW (Vw32_ime_composition_window);
 + 
 +      himc = (ImmGetContextProc) (hwnd);
@@ -822,9 +818,7 @@
 +}
 + 
 +static void
-+w32_set_ime_status (hwnd, openp)
-+     HWND hwnd;
-+     int openp;
++w32_set_ime_status (HWND hwnd, int openp)
 +{
 +  HIMC himc;
 + 
@@ -834,8 +828,7 @@
 +}
 + 
 +static int
-+w32_get_ime_status (hwnd)
-+     HWND hwnd;
++w32_get_ime_status (HWND hwnd)
 +{
 +  HIMC himc;
 +  int ret;
@@ -848,10 +841,7 @@
 +}
 + 
 +static int
-+w32_set_ime_mode (hwnd, mode, mask)
-+     HWND hwnd;
-+     int mode;
-+     int mask;
++w32_set_ime_mode (HWND hwnd, int mode, int mask)
 +{
 +  HIMC himc;
 +  DWORD cmode, smode;
@@ -869,13 +859,11 @@
 +}
 + 
 +static BOOL
-+w32_get_ime_composition_string (hwnd)
-+     HWND hwnd;
++w32_get_ime_composition_string (HWND hwnd)
 +{
 +  HIMC hIMC;
 +  int size;
 +  HANDLE himestr;
-+  LPWSTR lpstr;
 + 
 +  struct frame *f;
 + 
@@ -945,7 +933,7 @@
 + 
 +  if (compstr)
 +    {
-+      t_start = PT;
++      t_start = t_end = PT;
 +      start = compstr_beginning_pos (DOCFEED_LENG);
 +      end = compstr_end_pos (DOCFEED_LENG);
 +    }
@@ -1067,7 +1055,7 @@
 +  HIMC hIMC;
 +  LONG l;
 + 
-+  if (hIMC = (ImmGetContextProc) (hwnd))
++  if ((hIMC = (ImmGetContextProc) (hwnd)))
 +    {
 +      if ((ImmGetCompositionStringProc) (hIMC, GCS_COMPSTR, NULL, 0)
 +	  >= DOCFEED_CSTR_LENG * CHRSZ)
@@ -1101,7 +1089,6 @@
 +w32_ime_control_init (void)
 +{
 +  HMODULE hImm32;
-+  HMODULE hUser32;
 + 
 +  hImm32 = GetModuleHandle ("IMM32.DLL");
 +  if (!hImm32)
@@ -1241,9 +1228,7 @@
 +    return 1;
 +}
 +void
-+w32_set_ime_logfont (hwnd, f)
-+     HWND hwnd;
-+     struct frame *f;
++w32_set_ime_logfont (HWND hwnd, struct frame *f)
 +{
 +  Lisp_Object ime_font = Qnil, temp = Qnil, font = Qnil, family;
 +  int fsid = -1;
@@ -1255,21 +1240,21 @@
 +  if (!fIME || NILP(Vime_control))
 +    return;
 + 
-+  if (STRINGP(ime_font = get_frame_param (f, Qime_font))
++  if ((STRINGP(ime_font = get_frame_param (f, Qime_font))
 +          /* fontset */
-+      && ((fsid = fs_query_fontset(ime_font, 0)) >= 0
++      && (((fsid = fs_query_fontset(ime_font, 0)) >= 0
 +	  && !NILP(font = fontset_ascii(fsid))
 +	  && !NILP(font = font_spec_from_name(font))
 +	  && !NILP(temp = Ffontset_font(temp, make_number(0x3042), Qnil))
-+	  && !NILP(family = XCAR(temp))
++	  && !NILP(family = XCAR(temp)))
 +	  /* font */
-+	  || !NILP(font = font_spec_from_name(ime_font))
++	  || (!NILP(font = font_spec_from_name(ime_font))
 +	  && SYMBOLP(family = AREF (font, FONT_FAMILY_INDEX))
-+	  && STRINGP(family = SYMBOL_NAME(family)))
++	  && STRINGP(family = SYMBOL_NAME(family)))))
 +       
 +      /* use font object */
 +	  /* frame-parameter */
-+      || (FONTP(font = ime_font)
++      || ((FONTP(font = ime_font)
 +	  /* frame fontset */
 +	  || ((fsid = FRAME_FONTSET(f)) >= 0
 +	      && !NILP(font =
@@ -1277,7 +1262,7 @@
 +			    temp = Fchar_to_string(make_number(0x3042))))))
 +      && SYMBOLP(family = Ffont_get(font, QCfamily))
 +      && STRINGP(family = SYMBOL_NAME(family))
-+      && !NILP(font = copy_font_spec(font))) {
++      && !NILP(font = copy_font_spec(font)))) {
 +    Lisp_Object tail;
 + 
 +    fill_in_logfont (f, &logfont, font);
@@ -1286,7 +1271,7 @@
 + 
 +    family = ENCODE_SYSTEM(family);
 + 
-+    strcpy(logfont.lfFaceName, SDATA(family));
++    strcpy(logfont.lfFaceName, SSDATA(family));
 + 
 +    /* rescale */
 +    for (tail = Vface_font_rescale_alist; CONSP (tail); tail = XCDR (tail)) {
@@ -1303,7 +1288,7 @@
 +	Lisp_Object name;
 +	if (!NILP(name = Ffont_get(XCAR (temp), QCfamily)) &&
 +	    STRINGP(name) &&
-+	    xstrcasecmp(SDATA(name), SDATA(family)) == 0) {
++	    xstrcasecmp(SSDATA(name), SSDATA(family)) == 0) {
 +	  logfont.lfHeight *=  XFLOAT_DATA (XCDR (temp));
 +	  break;
 +	}
@@ -1321,8 +1306,7 @@
 +    }
 +}
 +static void
-+w32_set_ime_font (hwnd)
-+     HWND hwnd;
++w32_set_ime_font (HWND hwnd)
 +{
 +  HIMC himc;
 + 
@@ -1339,13 +1323,7 @@
 +
 +static LRESULT CALLBACK
 +conversion_agent_wndproc (HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
-+/*     HWND hwnd;
-+       UINT message;
-+       WPARAM wparam;
-+       LPARAM lparam; */
 +{
-+  HIMC himc, holdimc;
-+
 +  switch (message)
 +    {
 +    case WM_MULE_IMM_SET_STATUS:
@@ -1362,7 +1340,7 @@
 +
 +    case WM_MULE_IMM_SET_IMEFONT:
 +      w32_set_ime_font (hwnd);
-+
++      FALLTHROUGH;
 +    case WM_MULE_IMM_SET_CONVERSION_WINDOW:
 +      if (w32_get_ime_status (hwnd))
 +	w32_set_ime_conv_window (hwnd, (struct frame *) wparam);
@@ -1397,7 +1375,6 @@
 +{
 +  if (fIME && !NILP (Vime_control))
 +    {
-+      HIMC himc;
 +      HWND hwnd;
 +
 +      if (!NILP (Fime_get_mode ()))
@@ -1420,7 +1397,6 @@
 +{
 +  if (fIME && !NILP (Vime_control))
 +    {
-+      HIMC himc;
 +      HWND hwnd;
 +
 +      if (NILP (Fime_get_mode ()))
@@ -1549,7 +1525,6 @@
 +  (Lisp_Object reading, Lisp_Object word)
 +{
 +  HKL hkl;
-+  int reading_len, word_len;
 +  REGISTERWORD regword;
 +  Lisp_Object encoded_reading, encoded_word;
 +
@@ -1562,14 +1537,12 @@
 +      encoded_reading = Fencode_coding_string (reading,
 +					       Vlocale_coding_system,
 +					       Qnil, Qnil);
-+      reading_len = SBYTES (encoded_reading);
-+      regword.lpReading = SDATA (encoded_reading);
++      regword.lpReading = SSDATA (encoded_reading);
 +
 +      encoded_word = Fencode_coding_string (word,
 +					    Vlocale_coding_system,
 +					    Qnil, Qnil);
-+      word_len = SBYTES (encoded_word);
-+      regword.lpWord = SDATA (encoded_word);
++      regword.lpWord = SSDATA (encoded_word);
 +      (ImmConfigureIMEProc) (hkl, FRAME_W32_WINDOW (SELECTED_FRAME ()),
 +			    IME_CONFIG_REGISTERWORD, &regword);
 +    }
@@ -1716,7 +1689,7 @@
  			 w32 specialized functions
   ***********************************************************************/
  
-@@ -9294,6 +10480,9 @@
+@@ -10359,6 +11519,9 @@
    x_set_fullscreen,
    x_set_font_backend,
    x_set_alpha,
@@ -1725,8 +1698,8 @@
 +#endif /* USE_W32_IME */ 
    0, /* x_set_sticky */
    0, /* x_set_tool_bar_position */
- };
-@@ -9307,6 +10496,10 @@
+   0, /* x_set_inhibit_double_buffering */
+@@ -10381,6 +11544,10 @@
    w32_visible_system_caret_hwnd = NULL;
  
    DEFSYM (Qundefined_color, "undefined-color");
@@ -1737,9 +1710,9 @@
    DEFSYM (Qcancel_timer, "cancel-timer");
    DEFSYM (Qhyper, "hyper");
    DEFSYM (Qsuper, "super");
-@@ -9618,6 +10811,27 @@
- This variable has effect only on Windows Vista and later.  */);
-   w32_disable_new_uniscribe_apis = 0;
+@@ -10727,6 +11894,27 @@
+ 	       doc: /* Non-nil means don't display the abort dialog when aborting.  */);
+   w32_disable_abort_dialog = 0;
  
 +#ifdef USE_W32_IME
 +#ifdef RECONVERSION
@@ -1765,7 +1738,7 @@
  #if 0 /* TODO: Port to W32 */
    defsubr (&Sx_change_window_property);
    defsubr (&Sx_delete_window_property);
-@@ -9670,6 +10884,18 @@
+@@ -10781,6 +11969,18 @@
    defsubr (&Sw32_notification_close);
  #endif
  
@@ -1784,7 +1757,7 @@
  #ifdef WINDOWSNT
    defsubr (&Sfile_system_info);
    defsubr (&Sdefault_printer_name);
-@@ -9942,6 +11168,7 @@
+@@ -11056,6 +12256,7 @@
    get_title_bar_info_fn = (GetTitleBarInfo_Proc)
      GetProcAddress (user32_lib, "GetTitleBarInfo");
  
@@ -1792,7 +1765,7 @@
    {
      HMODULE imm32_lib = GetModuleHandle ("imm32.dll");
      get_composition_string_fn = (ImmGetCompositionString_Proc)
-@@ -9953,6 +11180,7 @@
+@@ -11067,6 +12268,7 @@
      set_ime_composition_window_fn = (ImmSetCompositionWindow_Proc)
        GetProcAddress (imm32_lib, "ImmSetCompositionWindow");
    }
@@ -1800,21 +1773,19 @@
  
    except_code = 0;
    except_addr = 0;
---- ./src/w32font.c.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/w32font.c	2017-09-13 21:00:32.717479200 +0900
-@@ -52,7 +52,10 @@
+--- ./src/w32font.c.orig	2018-01-09 05:23:58.000000000 +0900
++++ ./src/w32font.c	2018-04-10 23:10:39.850158200 +0900
+@@ -52,7 +52,9 @@
  #define JOHAB_CHARSET 130
  #endif
  
--static void fill_in_logfont (struct frame *, LOGFONT *, Lisp_Object);
 +#ifndef USE_W32_IME
-+static
+ static void fill_in_logfont (struct frame *, LOGFONT *, Lisp_Object);
 +#endif
-+void fill_in_logfont (struct frame *, LOGFONT *, Lisp_Object);
  
  static BYTE w32_antialias_type (Lisp_Object);
  static Lisp_Object lispy_antialias_type (BYTE);
-@@ -1911,7 +1914,10 @@
+@@ -1948,7 +1950,10 @@
  }
  
  /* Fill in all the available details of LOGFONT from FONT_SPEC.  */
@@ -1826,8 +1797,8 @@
  fill_in_logfont (struct frame *f, LOGFONT *logfont, Lisp_Object font_spec)
  {
    Lisp_Object tmp, extra;
---- ./src/w32font.h.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/w32font.h	2017-09-13 21:00:32.731508500 +0900
+--- ./src/w32font.h.orig	2018-01-09 05:23:58.000000000 +0900
++++ ./src/w32font.h	2018-04-10 23:10:39.860189300 +0900
 @@ -83,6 +83,9 @@
  int uniscribe_check_otf (LOGFONT *font, Lisp_Object otf_spec);
  
@@ -1836,11 +1807,11 @@
 +void fill_in_logfont (struct frame *, LOGFONT *, Lisp_Object);
 +#endif
  
- extern void syms_of_w32font (void);
  extern void globals_of_w32font (void);
---- ./src/w32term.c.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/w32term.c	2017-09-13 21:00:32.746540600 +0900
-@@ -5302,6 +5302,81 @@
+ 
+--- ./src/w32term.c.orig	2018-03-13 00:59:18.000000000 +0900
++++ ./src/w32term.c	2018-04-10 23:10:39.871204300 +0900
+@@ -5499,6 +5499,79 @@
  	  break;
  #endif
  
@@ -1870,8 +1841,6 @@
 +		lpStr = (LPWSTR) hw32_ime_string;
 +		while(lpStr)
 +		  {
-+		    wchar_t code;
-+
 +		    EVENT_INIT (buf);
 +		    XSETFRAME (buf.frame_or_window, f);
 +		    buf.timestamp = msg.msg.time;
@@ -1887,7 +1856,7 @@
 +			  {
 +			    buf.code = 0x10000
 +			      + (((*lpStr & 0x3FF) << 10)
-+				 | *(lpStr + 1) & 0x3FF);
++				 | (*(lpStr + 1) & 0x3FF));
 +			    lpStr++;
 +			  }
 +			else
@@ -1922,7 +1891,7 @@
  	default:
  	  /* Check for messages registered at runtime.  */
  	  if (msg.msg.message == msh_mousewheel)
-@@ -5667,7 +5742,12 @@
+@@ -5864,7 +5937,12 @@
  	  w32_system_caret_hdr_height = WINDOW_HEADER_LINE_HEIGHT (w);
  	  w32_system_caret_mode_height = WINDOW_MODE_LINE_HEIGHT (w);
  
@@ -1935,7 +1904,7 @@
  
  	  /* If the size of the active cursor changed, destroy the old
  	     system caret.  */
-@@ -7059,6 +7139,9 @@
+@@ -7315,6 +7393,9 @@
      horizontal_scroll_bar_left_border = horizontal_scroll_bar_right_border
        = GetSystemMetrics (SM_CYHSCROLL);
    }
@@ -1945,9 +1914,9 @@
  }
  
  void
---- ./src/w32term.h.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/w32term.h	2017-09-13 21:00:32.754556700 +0900
-@@ -627,6 +627,8 @@
+--- ./src/w32term.h.orig	2018-01-09 05:23:58.000000000 +0900
++++ ./src/w32term.h	2018-04-10 23:10:39.881226700 +0900
+@@ -619,6 +619,8 @@
  #endif /* WM_MOUSEHWHEEL  */
  #ifndef WM_APPCOMMAND
  #define WM_APPCOMMAND 0x319
@@ -1956,7 +1925,7 @@
  #define GET_APPCOMMAND_LPARAM(lParam)  (HIWORD(lParam) & 0x7fff)
  #endif
  #ifndef WM_UNICHAR
-@@ -665,6 +667,96 @@
+@@ -657,6 +659,96 @@
  #define WM_EMACS_FILENOTIFY            (WM_EMACS_START + 25)
  #define WM_EMACS_END                   (WM_EMACS_START + 26)
  
@@ -2053,7 +2022,7 @@
  #define WND_FONTWIDTH_INDEX    (0)
  #define WND_LINEHEIGHT_INDEX   (4)
  #define WND_BORDER_INDEX       (8)
-@@ -860,3 +952,8 @@
+@@ -870,3 +962,8 @@
  #ifdef CYGWIN
  extern int w32_message_fd;
  #endif /* CYGWIN */
@@ -2062,9 +2031,9 @@
 +extern void w32_set_ime_logfont (HWND, struct frame *);
 +extern void w32_ime_control_init (void);
 +#endif /* USE_W32_IME */
---- ./src/window.c.orig	2017-04-15 00:02:47.000000000 +0900
-+++ ./src/window.c	2017-09-13 21:00:32.764577300 +0900
-@@ -466,6 +466,10 @@
+--- ./src/window.c.orig	2018-03-13 00:59:18.000000000 +0900
++++ ./src/window.c	2018-04-10 23:10:39.892259800 +0900
+@@ -467,6 +467,10 @@
  
  EMACS_INT window_select_count;
  
@@ -2075,7 +2044,7 @@
  /* If select_window is called with inhibit_point_swap true it will
     not store point of the old selected window's buffer back into that
     window's pointm slot.  This is needed by Fset_window_configuration to
-@@ -477,6 +481,9 @@
+@@ -478,6 +482,9 @@
  {
    struct window *w;
    struct frame *sf;
@@ -2085,7 +2054,7 @@
  
    CHECK_LIVE_WINDOW (window);
  
-@@ -529,6 +536,11 @@
+@@ -531,6 +538,11 @@
        record_buffer (w->contents);
      }
  
@@ -2097,7 +2066,7 @@
    return window;
  }
  
-@@ -3375,6 +3387,12 @@
+@@ -3608,6 +3620,12 @@
  
    set_window_buffer (window, buffer, true, !NILP (keep_margins));
  
@@ -2110,7 +2079,7 @@
    return Qnil;
  }
  
-@@ -7160,6 +7178,10 @@
+@@ -7540,6 +7558,10 @@
    Fput (Qscroll_down, Qscroll_command, Qt);
  
    DEFSYM (Qwindow_configuration_change_hook, "window-configuration-change-hook");
@@ -2121,7 +2090,7 @@
    DEFSYM (Qwindowp, "windowp");
    DEFSYM (Qwindow_configuration_p, "window-configuration-p");
    DEFSYM (Qwindow_live_p, "window-live-p");
-@@ -7248,6 +7270,17 @@
+@@ -7632,6 +7654,17 @@
  with the relevant frame selected.  */);
    Vwindow_configuration_change_hook = Qnil;
  
@@ -2136,6 +2105,6 @@
 +  Vselect_window_functions = Qnil;
 +#endif
 +
-   DEFVAR_LISP ("recenter-redisplay", Vrecenter_redisplay,
- 	       doc: /* Non-nil means `recenter' redraws entire frame.
- If this option is non-nil, then the `recenter' command with a nil
+   DEFVAR_LISP ("window-size-change-functions", Vwindow_size_change_functions,
+     doc: /* Functions called during redisplay, if window sizes have changed.
+ The value should be a list of functions that take one argument.
