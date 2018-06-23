@@ -2,7 +2,6 @@
 STAGE1PKG_DIRS = \
 	emacs-w32-ime \
 	qdbm \
-	pth \
 	jpegoptim \
 	freetype2 \
 
@@ -10,7 +9,6 @@ STAGE1PKG_DIRS = \
 STAGE2PKG_DIRS = \
 	Mew \
 	hyperestraier-encore \
-	gnupg2.0 \
 	fontconfig \
 
 SUBDIRS = $(STAGE1PKG_DIRS) $(STAGE2PKG_DIRS)
