@@ -4,12 +4,14 @@ STAGE1PKG_DIRS = \
 	qdbm \
 	pth \
 	jpegoptim \
+	freetype2 \
 
 # Stage 2 packages: depends on phase 1 packages
 STAGE2PKG_DIRS = \
 	Mew \
 	hyperestraier-encore \
 	gnupg2.0 \
+	fontconfig \
 
 SUBDIRS = $(STAGE1PKG_DIRS) $(STAGE2PKG_DIRS)
 
