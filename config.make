@@ -1,6 +1,5 @@
 # Stage 1 packages: depends only on Cygwin official package
 STAGE1PKG_DIRS = \
-	ghostscript \
 	emacs-w32-ime \
 	qdbm \
 	pth \
