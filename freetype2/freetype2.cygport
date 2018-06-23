@@ -1,5 +1,5 @@
 NAME="freetype2"
-VERSION=2.9
+VERSION=2.9.1
 RELEASE=0
 CATEGORY="Libs"
 SUMMARY="FreeType font engine"
@@ -34,7 +34,7 @@ src_compile() {
 	cd ${B}/freetype2
 	CYGCONF_SOURCE=${B}/freetype2
 	# harfbuzz: new in 2.5.3, circular dep
-	cygconf --with-zlib --with-bzip2 --with-png --without-harfbuzz
+	cygconf --with-zlib --with-bzip2 --with-png --without-harfbuzz --enable-freetype-config
 	cygmake all
 	cygmake refdoc
 

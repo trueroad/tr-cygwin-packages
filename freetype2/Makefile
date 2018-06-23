@@ -1,5 +1,5 @@
 NAME = freetype2
-VERSION = 2.9
+VERSION = 2.9.1
 RELEASE = 0
 
 CYGPORT_FILE = ${PN}.cygport
