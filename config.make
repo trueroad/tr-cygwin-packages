@@ -4,6 +4,7 @@ STAGE1PKG_DIRS = \
 	qdbm \
 	jpegoptim \
 	freetype2 \
+	liblbfgs \
 
 # Stage 2 packages: depends on phase 1 packages
 STAGE2PKG_DIRS = \

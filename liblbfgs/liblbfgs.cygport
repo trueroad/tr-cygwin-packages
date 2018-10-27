@@ -1,0 +1,36 @@
+NAME="liblbfgs"
+VERSION=1.10
+RELEASE=1
+
+HOMEPAGE="http://www.chokkan.org/software/${PN}/"
+SRC_URI="
+	https://github.com/downloads/chokkan/${PN}/${PN}-${PV}.tar.gz
+	${PN}.pc
+"
+PATCH_URI="libtool-package-versioning.patch"
+
+CATEGORY="Libs"
+SUMMARY="L-BFGS nonlinear optimizer"
+DESCRIPTION="This library is a C port of the implementation of
+Limited-memory Broyden-Fletcher-Goldfarb-Shanno (L-BFGS) method.
+The L-BFGS method solves the unconstrainted minimization problems."
+
+abi=1
+
+PKG_NAMES="${PN} ${PN}${abi} ${PN}-devel"
+
+PKG_CONTENTS[0]=""
+liblbfgs_REQUIRES=${PN}${abi}
+
+PKG_CONTENTS[1]="usr/bin/ usr/share/doc/"
+
+PKG_CONTENTS[2]="usr/include/ usr/lib/"
+
+src_install() {
+        cd ${B}
+	cyginstall
+	cd ${S}
+	dodir /usr/lib/pkgconfig
+	insinto /usr/lib/pkgconfig
+	doins ${PN}.pc
+}
