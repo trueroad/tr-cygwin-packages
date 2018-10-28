@@ -19,11 +19,11 @@ abi=1
 
 PKG_NAMES="${PN}${abi} ${PN}-devel"
 
-PKG_CONTENTS[0]="usr/bin/cyglbfgs-${abi}.dll"
-PKG_SUMMARY[0]="${SUMMARY} - runtime"
+eval ${PN}${abi}_CONTENTS='"usr/bin/cyglbfgs-${abi}.dll"'
+eval ${PN}${abi}_SUMMARY='"${SUMMARY} - runtime"'
 
-PKG_CONTENTS[1]="usr/include/ usr/lib/ usr/share/doc/"
-PKG_SUMMARY[1]="${SUMMARY} - header and import lib"
+eval ${PN}_devel_CONTENTS='"usr/include/ usr/lib/ usr/share/doc/"'
+eval ${PN}_devel_SUMMARY='"${SUMMARY} - header and import lib"'
 
 src_install() {
         cd ${B}
