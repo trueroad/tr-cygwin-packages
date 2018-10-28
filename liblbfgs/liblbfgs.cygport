@@ -17,14 +17,13 @@ The L-BFGS method solves the unconstrainted minimization problems."
 
 abi=1
 
-PKG_NAMES="${PN} ${PN}${abi} ${PN}-devel"
+PKG_NAMES="${PN}${abi} ${PN}-devel"
 
-PKG_CONTENTS[0]=""
-liblbfgs_REQUIRES=${PN}${abi}
+PKG_CONTENTS[0]="usr/bin/cyglbfgs-${abi}.dll"
+PKG_SUMMARY[0]="${SUMMARY} - runtime"
 
-PKG_CONTENTS[1]="usr/bin/ usr/share/doc/"
-
-PKG_CONTENTS[2]="usr/include/ usr/lib/"
+PKG_CONTENTS[1]="usr/include/ usr/lib/ usr/share/doc/"
+PKG_SUMMARY[1]="${SUMMARY} - header and import lib"
 
 src_install() {
         cd ${B}
@@ -33,4 +32,10 @@ src_install() {
 	dodir /usr/lib/pkgconfig
 	insinto /usr/lib/pkgconfig
 	doins ${PN}.pc
+}
+
+src_test() {
+	export PATH=${B}/lib/.libs:${PATH}
+	cd ${B}/sample
+	.libs/sample.exe
 }
