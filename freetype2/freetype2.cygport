@@ -1,12 +1,12 @@
 NAME="freetype2"
-VERSION=2.9.1
+VERSION=2.10.0
 RELEASE=0
 CATEGORY="Libs"
 SUMMARY="FreeType font engine"
 DESCRIPTION="FreeType 2 is a software font engine that is designed to be
 small, efficient, highly customizable and portable while capable of producing
 high-quality output (glyph images)."
-HOMEPAGE="http://freetype.sourceforge.net/"
+HOMEPAGE="https://www.freetype.org/"
 SRC_URI="mirror://sourceforge/freetype/freetype-${VERSION}.tar.bz2
          mirror://sourceforge/freetype/freetype-doc-${VERSION}.tar.bz2
          mirror://sourceforge/freetype/ft2demos-${VERSION}.tar.bz2"
@@ -36,7 +36,7 @@ src_compile() {
 	# harfbuzz: new in 2.5.3, circular dep
 	cygconf --with-zlib --with-bzip2 --with-png --without-harfbuzz --enable-freetype-config
 	cygmake all
-	cygmake refdoc
+	# cygmake refdoc
 
 	mkdir -p ${B}/ft2demos
 	lndir ${S}/../ft2demos-${PV} ${B}/ft2demos
