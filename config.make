@@ -8,6 +8,7 @@ STAGE1PKG_DIRS = \
 	python-scipy \
 	python-cycler \
 	python-dateutil \
+	python-kiwisolver \
 
 # Stage 2 packages: depends on phase 1 packages
 STAGE2PKG_DIRS = \

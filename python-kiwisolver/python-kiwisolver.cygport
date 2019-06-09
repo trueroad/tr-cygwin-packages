@@ -1,0 +1,19 @@
+PYTHON_WHEEL_VERSIONS="3.6"
+inherit python-wheel
+
+NAME="python-kiwisolver"
+VERSION=1.1.0
+RELEASE=0
+CATEGORY="Python"
+SUMMARY="Efficient C++ implementation of the Cassowary constraint solving algorithm"
+DESCRIPTION="Kiwi is an efficient C++ implementation of the Cassowary constraint solving algorithm."
+HOMEPAGE="https://kiwisolver.readthedocs.io/"
+SRC_URI="https://github.com/nucleic/kiwi/archive/${VERSION}.tar.gz"
+SRC_DIR="kiwi-${VERSION}"
+
+DEPEND="gcc-core
+	gcc-g++
+	python36
+	python36-pip
+	python36-devel
+	python36-wheel"
