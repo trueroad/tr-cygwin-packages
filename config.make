@@ -14,6 +14,7 @@ STAGE1PKG_DIRS = \
 STAGE2PKG_DIRS = \
 	Mew \
 	hyperestraier-encore \
+	python-matplotlib \
 
 SUBDIRS = $(STAGE1PKG_DIRS) $(STAGE2PKG_DIRS)
 
