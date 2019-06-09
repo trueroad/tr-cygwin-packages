@@ -1,5 +1,5 @@
 NAME = Mew
-VERSION = 6.8
+VERSION = 6.8.20190415
 RELEASE = 1
 
 CYGPORT_FILE = ${PN}.cygport
