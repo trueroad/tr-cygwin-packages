@@ -1,5 +1,5 @@
 NAME="emacs-w32-ime"
-VERSION="26.1"
+VERSION="26.2"
 RELEASE=1
 
 HOMEPAGE="
@@ -13,13 +13,13 @@ SRC_URI="
 	preremove.sh
 	emacs-26.1-rc1-ImmDisableIME.diff
 	emacs-26.1-rc1-mingw-imagemagick.diff
+	emacs-26.1-rc1-image-fit.diff
+	emacs-26.1-rc1-cmigemo.diff
 "
 SRC_DIR="emacs-${PV}"
 
 PATCH_URI="
 	emacs-26.1-rc1-w32-ime.diff
-	emacs-26.1-rc1-image-fit.diff
-	emacs-26.1-rc1-cmigemo.diff
 	emacs-26.1-rc1-cygwin-rsvg.diff
 	emacs-26.1-rc1-disable-w32-ime.diff
 "
@@ -39,7 +39,7 @@ DEPEND="libtiff-devel
 	pkgconfig(Wand)
 	pkgconfig(xpm-nox)"
 
-CYGCONF_ARGS="--with-w32 --with-modules --without-cmigemo --prefix=/usr/emacs-w32-ime/${PV} --exec-prefix=/usr/emacs-w32-ime/${PV} --localstatedir=/usr/emacs-w32-ime/${PV}/var --sysconfdir=/usr/emacs-w32-ime/${PV}/etc"
+CYGCONF_ARGS="--with-w32 --with-modules --prefix=/usr/emacs-w32-ime/${PV} --exec-prefix=/usr/emacs-w32-ime/${PV} --localstatedir=/usr/emacs-w32-ime/${PV}/var --sysconfdir=/usr/emacs-w32-ime/${PV}/etc"
 
 CATEGORY="Editors Interpreters"
 SUMMARY="Emacs binaries with IME patch using the native Windows GUI."

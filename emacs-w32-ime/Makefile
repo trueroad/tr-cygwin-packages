@@ -1,5 +1,5 @@
 NAME = emacs-w32-ime
-VERSION = 26.1
+VERSION = 26.2
 RELEASE = 1
 
 CYGPORT_FILE = ${PN}.cygport

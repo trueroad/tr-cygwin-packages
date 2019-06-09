@@ -1,4 +1,4 @@
-PV=26.1
+PV=26.2
 
 /usr/sbin/update-alternatives \
     --install /usr/bin/emacs emacs /usr/emacs-w32-ime/${PV}/bin/emacs.exe 40
