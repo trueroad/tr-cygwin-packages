@@ -40,11 +40,17 @@ P := $(NAME)-$(VERSION)
 PVR := $(VERSION)-$(RELEASE)
 PF := $(NAME)-$(VERSION)-$(RELEASE)
 
-ARCH ?= $(shell uname -m)
+UNAME_M := $(shell uname -m)
+ARCH ?= $(UNAME_M)
 ifeq ($(ARCH),i686)
 ARCHDIR := x86
 else
 ARCHDIR := $(ARCH)
+endif
+ifeq ($(UNAME_M),i686)
+INIDIR := x86
+else
+INIDIR := $(UNAME_M)
 endif
 
 WORKDIR := $(PF).$(ARCH)
@@ -73,6 +79,7 @@ show:
 
 	@echo "ARCH = $(ARCH)"
 	@echo "ARCHDIR = $(ARCHDIR)"
+	@echo "INIDIR = $(INIDIR)"
 
 	@echo "WORKDIR = $(WORKDIR)"
 

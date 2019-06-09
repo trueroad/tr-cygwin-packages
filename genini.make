@@ -29,22 +29,22 @@
 #
 
 genini:
-ifneq ("$(wildcard $(WWW_DIST_ROOT)/$(ARCHDIR))","")
-	rm -f $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini
-	mksetupini --arch $(ARCHDIR) \
+ifneq ("$(wildcard $(WWW_DIST_ROOT)/$(INIDIR))","")
+	rm -f $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini
+	mksetupini --arch $(INIDIR) \
 		--disable-check missing-depended-package \
-		--inifile $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini \
+		--inifile $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini \
 		--okmissing required-package \
 		--releasearea $(WWW_DIST_ROOT)
-	bzip2 -zck $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini > \
-		$(WWW_DIST_ROOT)/$(ARCHDIR)/setup.bz2
-	xz -zck $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini > \
-		$(WWW_DIST_ROOT)/$(ARCHDIR)/setup.xz
+	bzip2 -zck $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini > \
+		$(WWW_DIST_ROOT)/$(INIDIR)/setup.bz2
+	xz -zck $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini > \
+		$(WWW_DIST_ROOT)/$(INIDIR)/setup.xz
 endif
 
-signini: $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini.sig \
-	$(WWW_DIST_ROOT)/$(ARCHDIR)/setup.bz2.sig \
-	$(WWW_DIST_ROOT)/$(ARCHDIR)/setup.xz.sig
+signini: $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini.sig \
+	$(WWW_DIST_ROOT)/$(INIDIR)/setup.bz2.sig \
+	$(WWW_DIST_ROOT)/$(INIDIR)/setup.xz.sig
 
 %.ini.sig: %.ini
 	gpg -b $<
@@ -54,33 +54,26 @@ signini: $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini.sig \
 	gpg -b $<
 
 verifyini:
-	gpg $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.ini.sig
-	gpg $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.bz2.sig
-	gpg $(WWW_DIST_ROOT)/$(ARCHDIR)/setup.xz.sig
+	gpg $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini.sig
+	gpg $(WWW_DIST_ROOT)/$(INIDIR)/setup.bz2.sig
+	gpg $(WWW_DIST_ROOT)/$(INIDIR)/setup.xz.sig
 
 genini-all:
-	$(MAKE) ARCHDIR=x86_64 genini
-	$(MAKE) ARCHDIR=x86 genini
-	$(MAKE) ARCHDIR=noarch genini
+	$(MAKE) INIDIR=x86_64 genini
+	$(MAKE) INIDIR=x86 genini
 
 signini-all:
 ifneq ("$(wildcard $(WWW_DIST_ROOT)/x86_64)","")
-	$(MAKE) ARCHDIR=x86_64 signini
+	$(MAKE) INIDIR=x86_64 signini
 endif
 ifneq ("$(wildcard $(WWW_DIST_ROOT)/x86)","")
-	$(MAKE) ARCHDIR=x86 signini
-endif
-ifneq ("$(wildcard $(WWW_DIST_ROOT)/noarch)","")
-	$(MAKE) ARCHDIR=noarch signini
+	$(MAKE) INIDIR=x86 signini
 endif
 
 verifyini-all:
 ifneq ("$(wildcard $(WWW_DIST_ROOT)/x86_64)","")
-	$(MAKE) ARCHDIR=x86_64 verifyini
+	$(MAKE) INIDIR=x86_64 verifyini
 endif
 ifneq ("$(wildcard $(WWW_DIST_ROOT)/x86)","")
-	$(MAKE) ARCHDIR=x86 verifyini
-endif
-ifneq ("$(wildcard $(WWW_DIST_ROOT)/noarch)","")
-	$(MAKE) ARCHDIR=noarch verifyini
+	$(MAKE) INIDIR=x86 verifyini
 endif
