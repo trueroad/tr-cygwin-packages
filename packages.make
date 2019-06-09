@@ -116,4 +116,8 @@ $(WORKDIR)/log/$(PF)-install.log: $(WORKDIR)/log/$(PF)-check.log
 	LANG=C cygport $(CYGPORT_FILE) install
 
 $(WORKDIR)/log/$(PF)-pkg.log: $(WORKDIR)/log/$(PF)-install.log
+ifeq ($(TEST_FLAG),true)
+	LANG=C cygport $(CYGPORT_FILE) package-test
+else
 	LANG=C cygport $(CYGPORT_FILE) package
+endif
