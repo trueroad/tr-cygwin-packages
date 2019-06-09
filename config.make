@@ -6,6 +6,7 @@ STAGE1PKG_DIRS = \
 	freetype2 \
 	fontconfig \
 	python-scipy \
+	python-cycler \
 
 # Stage 2 packages: depends on phase 1 packages
 STAGE2PKG_DIRS = \
