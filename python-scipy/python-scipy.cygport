@@ -1,0 +1,30 @@
+PYTHON_WHEEL_VERSIONS="3.6"
+inherit python-wheel
+
+NAME="python-scipy"
+VERSION=1.3.0
+RELEASE=0
+CATEGORY="Python"
+SUMMARY="Python scientific computing module"
+DESCRIPTION="SciPy (pronounced 'Sigh Pie') is open-source software
+for mathematics, science, and engineering.
+It includes modules for statistics, optimization, integration,
+linear algebra, Fourier transforms, signal and image processing,
+ODE solvers, and more."
+HOMEPAGE="https://www.scipy.org/"
+SRC_URI="https://github.com/scipy/scipy/releases/download/v${VERSION}/scipy-${VERSION}.tar.xz"
+SRC_DIR="scipy-${VERSION}"
+
+DEPEND="gcc-core
+	gcc-g++
+	gcc-fortran
+	liblapack-devel
+	libcrypt-devel
+	python36
+	python36-pip
+	python36-wheel
+	python36-devel
+	python36-numpy"
+
+# interferes with get_flags_linker_so in numpy.distutils.fcompiler
+unset LDFLAGS
