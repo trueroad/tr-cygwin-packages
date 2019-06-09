@@ -7,6 +7,7 @@ STAGE1PKG_DIRS = \
 	fontconfig \
 	python-scipy \
 	python-cycler \
+	python-dateutil \
 
 # Stage 2 packages: depends on phase 1 packages
 STAGE2PKG_DIRS = \
