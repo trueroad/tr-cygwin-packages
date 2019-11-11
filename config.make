@@ -5,6 +5,7 @@ STAGE1PKG_DIRS = \
 	jpegoptim \
 	freetype2 \
 	fontconfig \
+	qpdf \
 	python-scipy \
 	python-cycler \
 	python-dateutil \
