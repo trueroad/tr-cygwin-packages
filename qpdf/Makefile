@@ -1,5 +1,5 @@
 NAME = qpdf
-VERSION = 9.1.rc1
+VERSION = 9.1.0
 RELEASE = 0
 
 CYGPORT_FILE = ${PN}.cygport
