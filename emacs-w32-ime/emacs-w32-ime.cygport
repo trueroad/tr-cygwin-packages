@@ -1,5 +1,5 @@
 NAME="emacs-w32-ime"
-VERSION="26.2"
+VERSION="26.3"
 RELEASE=1
 
 HOMEPAGE="
@@ -8,21 +8,19 @@ HOMEPAGE="
 SRC_URI="
 	https://ftp.gnu.org/gnu/emacs/emacs-${PV}.tar.xz
 	https://ftp.gnu.org/gnu/emacs/emacs-${PV}.tar.xz.sig
-	README.txt
 	postinstall.sh
 	preremove.sh
-	emacs-26.1-rc1-ImmDisableIME.diff
-	emacs-26.1-rc1-mingw-imagemagick.diff
-	emacs-26.1-rc1-image-fit.diff
-	emacs-26.1-rc1-cmigemo.diff
 "
 SRC_DIR="emacs-${PV}"
 
-PATCH_URI="
-	emacs-26.1-rc1-w32-ime.diff
-	emacs-26.1-rc1-cygwin-rsvg.diff
-	emacs-26.1-rc1-disable-w32-ime.diff
-"
+# From cygwin official emacs-26.3-2 package
+PATCH_URI="nonbootstrap_static_heap.patch"
+PATCH_URI+=" bt.patch"
+PATCH_URI+=" 0001-Add-battery-support-to-all-Cygwin-builds.patch"
+PATCH_URI+=" 0001-Use-a-runtime-test-for-timerfd-on-Cygwin-Bug-34618.patch"
+
+# From http://tanehp.ec-net.jp/heppoko-lab/prog/zakki/emacs/emacs.html
+PATCH_URI+=" emacs-w32_26.3_20191207.patch"
 
 DEPEND="libtiff-devel
 	libgif-devel
@@ -36,10 +34,9 @@ DEPEND="libtiff-devel
 	pkgconfig(libxml-2.0)
 	pkgconfig(libpng)
 	pkgconfig(ncursesw)
-	pkgconfig(Wand)
 	pkgconfig(xpm-nox)"
 
-CYGCONF_ARGS="--with-w32 --with-modules --prefix=/usr/emacs-w32-ime/${PV} --exec-prefix=/usr/emacs-w32-ime/${PV} --localstatedir=/usr/emacs-w32-ime/${PV}/var --sysconfdir=/usr/emacs-w32-ime/${PV}/etc"
+CYGCONF_ARGS="--with-w32 --without-imagemagick --prefix=/usr/emacs-w32-ime/${PV} --exec-prefix=/usr/emacs-w32-ime/${PV} --localstatedir=/usr/emacs-w32-ime/${PV}/var --sysconfdir=/usr/emacs-w32-ime/${PV}/etc"
 
 CATEGORY="Editors Interpreters"
 SUMMARY="Emacs binaries with IME patch using the native Windows GUI."

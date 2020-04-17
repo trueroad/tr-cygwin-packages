@@ -1,0 +1,406 @@
+From 5af5df1f7c20858dab762830e1a94994ceda425b Mon Sep 17 00:00:00 2001
+From: Ken Brown <kbrown@cornell.edu>
+Date: Fri, 12 Jan 2018 08:51:16 -0500
+Subject: [PATCH] Add battery support to all Cygwin builds
+
+It already exists in the Cygwin-w32 build.
+* src/w32fns.c (Fw32_battery_status): Move to...
+* src/w32cygwinx: New file, to be used for functions common to
+the MS Windows and Cygwin builds.
+(syms_of_w32cygwinx): New function.
+* src/lisp.h: Add prototype of syms_of_w32cygwinx.
+* src/emacs.c (main) [HAVE_NTGUI or CYGWIN]: Call syms_of_w32cygwinx.
+* src/Makefile.in (SOME_MACHINE_OBJECTS):
+* configure.ac (W32_OBJ) [HAVE_W32]: Add w32cygwinx.o.
+(W32_LIBS) [CYGWIN]: Set equal to "-lkernel32" in non-w32 build.
+(W32_OBJ) [CYGWIN]: Set equal to "w32cygwinx.o" in non-w32 build.
+* etc/NEWS: Document the new battery support.
+---
+ configure.ac     |   8 +++-
+ etc/NEWS         |   4 ++
+ src/Makefile.in  |   9 ++--
+ src/emacs.c      |   4 ++
+ src/lisp.h       |   5 ++
+ src/w32cygwinx.c | 140 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/w32fns.c     | 110 -------------------------------------------
+ 7 files changed, 165 insertions(+), 115 deletions(-)
+ create mode 100644 src/w32cygwinx.c
+
+diff --git a/configure.ac b/configure.ac
+index c574d7dd0d..31d2a15f6c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -2084,7 +2084,7 @@ AC_DEFUN
+   AC_CHECK_TOOL(WINDRES, [windres],
+                 [AC_MSG_ERROR([No resource compiler found.])])
+   W32_OBJ="w32fns.o w32menu.o w32reg.o w32font.o w32term.o"
+-  W32_OBJ="$W32_OBJ w32xfns.o w32select.o w32uniscribe.o"
++  W32_OBJ="$W32_OBJ w32xfns.o w32select.o w32uniscribe.o w32cygwinx.o"
+   EMACSRES="emacs.res"
+   case "$canonical" in
+     x86_64-*-*) EMACS_MANIFEST="emacs-x64.manifest" ;;
+@@ -2119,6 +2119,12 @@ AC_DEFUN
+     XARGS_LIMIT="-s 10000"
+   fi
+ fi
++
++if test "${HAVE_W32}" = "no" && test "${opsys}" = "cygwin"; then
++  W32_LIBS="-lkernel32"
++  W32_OBJ="w32cygwinx.o"
++fi
++
+ AC_SUBST(W32_OBJ)
+ AC_SUBST(W32_LIBS)
+ AC_SUBST(EMACSRES)
+diff --git a/etc/NEWS b/etc/NEWS
+index 08dc140426..1d546c4ec1 100644
+--- a/etc/NEWS
++++ b/etc/NEWS
+@@ -230,6 +230,10 @@ file name extensions.
+ 
+ * Changes in Emacs 27.1 on Non-Free Operating Systems
+ 
++---
++** Battery status is now supported in all Cygwin builds.
++Previously it was supported only in the Cygwin-w32 build.
++
+ 
+ ----------------------------------------------------------------------
+ This file is part of GNU Emacs.
+diff --git a/src/Makefile.in b/src/Makefile.in
+index 2de888ada3..c84859cb4f 100644
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -277,11 +277,12 @@ NS_OBJC_OBJ=
+ ## Used only for GNUstep.
+ GNU_OBJC_CFLAGS=$(patsubst -specs=%-hardened-cc1,,@GNU_OBJC_CFLAGS@)
+ ## w32fns.o w32menu.c w32reg.o fringe.o fontset.o w32font.o w32term.o
+-## w32xfns.o w32select.o image.o w32uniscribe.o if HAVE_W32, else
+-## empty.
++## w32xfns.o w32select.o image.o w32uniscribe.o w32cygwinx.o if HAVE_W32,
++## w32cygwinx.o if CYGWIN but not HAVE_W32, else empty.
+ W32_OBJ=@W32_OBJ@
+ ## -lkernel32 -luser32 -lusp10 -lgdi32 -lole32 -lcomdlg32 -lcomctl32
+-## --lwinspool if HAVE_W32, else empty.
++## -lwinspool if HAVE_W32,
++## -lkernel32 if CYGWIN but not HAVE_W32, else empty.
+ W32_LIBS=@W32_LIBS@
+ 
+ ## emacs.res if HAVE_W32
+@@ -412,7 +413,7 @@ SOME_MACHINE_OBJECTS =
+   xterm.o xfns.o xmenu.o xselect.o xrdb.o xsmfns.o fringe.o image.o \
+   fontset.o dbusbind.o cygw32.o \
+   nsterm.o nsfns.o nsmenu.o nsselect.o nsimage.o nsfont.o macfont.o \
+-  w32.o w32console.o w32fns.o w32heap.o w32inevt.o w32notify.o \
++  w32.o w32console.o w32cygwinx.o w32fns.o w32heap.o w32inevt.o w32notify.o \
+   w32menu.o w32proc.o w32reg.o w32select.o w32term.o w32xfns.o \
+   w16select.o widget.o xfont.o ftfont.o xftfont.o ftxfont.o gtkutil.o \
+   xsettings.o xgselect.o termcap.o
+diff --git a/src/emacs.c b/src/emacs.c
+index 20ced26283..84cd3ac8c8 100644
+--- a/src/emacs.c
++++ b/src/emacs.c
+@@ -1566,6 +1566,10 @@ Using an Emacs configured with --with-x-toolkit=lucid does not have this problem
+       syms_of_fontset ();
+ #endif /* HAVE_NTGUI */
+ 
++#if defined HAVE_NTGUI || defined CYGWIN
++      syms_of_w32cygwinx ();
++#endif
++
+ #if defined WINDOWSNT || defined HAVE_NTGUI
+       syms_of_w32select ();
+ #endif
+diff --git a/src/lisp.h b/src/lisp.h
+index 3eb6e0d3c1..616aea0780 100644
+--- a/src/lisp.h
++++ b/src/lisp.h
+@@ -4482,6 +4482,11 @@ extern void syms_of_gfilenotify (void);
+ extern void syms_of_w32notify (void);
+ #endif
+ 
++#if defined HAVE_NTGUI || defined CYGWIN
++/* Defined in w32cygwinx.c.  */
++extern void syms_of_w32cygwinx (void);
++#endif
++
+ /* Defined in xfaces.c.  */
+ extern Lisp_Object Vface_alternative_font_family_alist;
+ extern Lisp_Object Vface_alternative_font_registry_alist;
+diff --git a/src/w32cygwinx.c b/src/w32cygwinx.c
+new file mode 100644
+index 0000000000..8d3ae164cf
+--- /dev/null
++++ b/src/w32cygwinx.c
+@@ -0,0 +1,140 @@
++/* Common functions for the Microsoft Windows and Cygwin builds.
++
++Copyright (C) 2018 Free Software Foundation, Inc.
++
++This file is part of GNU Emacs.
++
++GNU Emacs is free software: you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation, either version 3 of the License, or (at
++your option) any later version.
++
++GNU Emacs is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
++
++#include <config.h>
++
++#include <stdio.h>
++
++#include "lisp.h"
++#include "w32common.h"
++
++DEFUN ("w32-battery-status", Fw32_battery_status, Sw32_battery_status, 0, 0, 0,
++       doc: /* Get power status information from Windows system.
++
++The following %-sequences are provided:
++%L AC line status (verbose)
++%B Battery status (verbose)
++%b Battery status, empty means high, `-' means low,
++   `!' means critical, and `+' means charging
++%p Battery load percentage
++%s Remaining time (to charge or discharge) in seconds
++%m Remaining time (to charge or discharge) in minutes
++%h Remaining time (to charge or discharge) in hours
++%t Remaining time (to charge or discharge) in the form `h:min'  */)
++  (void)
++{
++  Lisp_Object status = Qnil;
++
++  SYSTEM_POWER_STATUS system_status;
++  if (GetSystemPowerStatus (&system_status))
++    {
++      Lisp_Object line_status, battery_status, battery_status_symbol;
++      Lisp_Object load_percentage, seconds, minutes, hours, remain;
++
++      long seconds_left = (long) system_status.BatteryLifeTime;
++
++      if (system_status.ACLineStatus == 0)
++	line_status = build_string ("off-line");
++      else if (system_status.ACLineStatus == 1)
++	line_status = build_string ("on-line");
++      else
++	line_status = build_string ("N/A");
++
++      if (system_status.BatteryFlag & 128)
++	{
++	  battery_status = build_string ("N/A");
++	  battery_status_symbol = empty_unibyte_string;
++	}
++      else if (system_status.BatteryFlag & 8)
++	{
++	  battery_status = build_string ("charging");
++	  battery_status_symbol = build_string ("+");
++	  if (system_status.BatteryFullLifeTime != -1L)
++	    seconds_left = system_status.BatteryFullLifeTime - seconds_left;
++	}
++      else if (system_status.BatteryFlag & 4)
++	{
++	  battery_status = build_string ("critical");
++	  battery_status_symbol = build_string ("!");
++	}
++      else if (system_status.BatteryFlag & 2)
++	{
++	  battery_status = build_string ("low");
++	  battery_status_symbol = build_string ("-");
++	}
++      else if (system_status.BatteryFlag & 1)
++	{
++	  battery_status = build_string ("high");
++	  battery_status_symbol = empty_unibyte_string;
++	}
++      else
++	{
++	  battery_status = build_string ("medium");
++	  battery_status_symbol = empty_unibyte_string;
++	}
++
++      if (system_status.BatteryLifePercent > 100)
++	load_percentage = build_string ("N/A");
++      else
++	{
++	  char buffer[16];
++	  snprintf (buffer, 16, "%d", system_status.BatteryLifePercent);
++	  load_percentage = build_string (buffer);
++	}
++
++      if (seconds_left < 0)
++	seconds = minutes = hours = remain = build_string ("N/A");
++      else
++	{
++	  long m;
++	  double h;
++	  char buffer[16];
++	  snprintf (buffer, 16, "%ld", seconds_left);
++	  seconds = build_string (buffer);
++
++	  m = seconds_left / 60;
++	  snprintf (buffer, 16, "%ld", m);
++	  minutes = build_string (buffer);
++
++	  h = seconds_left / 3600.0;
++	  snprintf (buffer, 16, "%3.1f", h);
++	  hours = build_string (buffer);
++
++	  snprintf (buffer, 16, "%ld:%02ld", m / 60, m % 60);
++	  remain = build_string (buffer);
++	}
++
++      status = listn (CONSTYPE_HEAP, 8,
++		      Fcons (make_number ('L'), line_status),
++		      Fcons (make_number ('B'), battery_status),
++		      Fcons (make_number ('b'), battery_status_symbol),
++		      Fcons (make_number ('p'), load_percentage),
++		      Fcons (make_number ('s'), seconds),
++		      Fcons (make_number ('m'), minutes),
++		      Fcons (make_number ('h'), hours),
++		      Fcons (make_number ('t'), remain));
++    }
++  return status;
++}
++
++void
++syms_of_w32cygwinx (void)
++{
++  defsubr (&Sw32_battery_status);
++}
+diff --git a/src/w32fns.c b/src/w32fns.c
+index ed375cddbe..6e0b3adf16 100644
+--- a/src/w32fns.c
++++ b/src/w32fns.c
+@@ -9213,115 +9213,6 @@ The coordinates X and Y are interpreted in pixels relative to a position
+   return Qnil;
+ }
+ 
+-DEFUN ("w32-battery-status", Fw32_battery_status, Sw32_battery_status, 0, 0, 0,
+-       doc: /* Get power status information from Windows system.
+-
+-The following %-sequences are provided:
+-%L AC line status (verbose)
+-%B Battery status (verbose)
+-%b Battery status, empty means high, `-' means low,
+-   `!' means critical, and `+' means charging
+-%p Battery load percentage
+-%s Remaining time (to charge or discharge) in seconds
+-%m Remaining time (to charge or discharge) in minutes
+-%h Remaining time (to charge or discharge) in hours
+-%t Remaining time (to charge or discharge) in the form `h:min'  */)
+-  (void)
+-{
+-  Lisp_Object status = Qnil;
+-
+-  SYSTEM_POWER_STATUS system_status;
+-  if (GetSystemPowerStatus (&system_status))
+-    {
+-      Lisp_Object line_status, battery_status, battery_status_symbol;
+-      Lisp_Object load_percentage, seconds, minutes, hours, remain;
+-
+-      long seconds_left = (long) system_status.BatteryLifeTime;
+-
+-      if (system_status.ACLineStatus == 0)
+-	line_status = build_string ("off-line");
+-      else if (system_status.ACLineStatus == 1)
+-	line_status = build_string ("on-line");
+-      else
+-	line_status = build_string ("N/A");
+-
+-      if (system_status.BatteryFlag & 128)
+-	{
+-	  battery_status = build_string ("N/A");
+-	  battery_status_symbol = empty_unibyte_string;
+-	}
+-      else if (system_status.BatteryFlag & 8)
+-	{
+-	  battery_status = build_string ("charging");
+-	  battery_status_symbol = build_string ("+");
+-	  if (system_status.BatteryFullLifeTime != -1L)
+-	    seconds_left = system_status.BatteryFullLifeTime - seconds_left;
+-	}
+-      else if (system_status.BatteryFlag & 4)
+-	{
+-	  battery_status = build_string ("critical");
+-	  battery_status_symbol = build_string ("!");
+-	}
+-      else if (system_status.BatteryFlag & 2)
+-	{
+-	  battery_status = build_string ("low");
+-	  battery_status_symbol = build_string ("-");
+-	}
+-      else if (system_status.BatteryFlag & 1)
+-	{
+-	  battery_status = build_string ("high");
+-	  battery_status_symbol = empty_unibyte_string;
+-	}
+-      else
+-	{
+-	  battery_status = build_string ("medium");
+-	  battery_status_symbol = empty_unibyte_string;
+-	}
+-
+-      if (system_status.BatteryLifePercent > 100)
+-	load_percentage = build_string ("N/A");
+-      else
+-	{
+-	  char buffer[16];
+-	  snprintf (buffer, 16, "%d", system_status.BatteryLifePercent);
+-	  load_percentage = build_string (buffer);
+-	}
+-
+-      if (seconds_left < 0)
+-	seconds = minutes = hours = remain = build_string ("N/A");
+-      else
+-	{
+-	  long m;
+-	  double h;
+-	  char buffer[16];
+-	  snprintf (buffer, 16, "%ld", seconds_left);
+-	  seconds = build_string (buffer);
+-
+-	  m = seconds_left / 60;
+-	  snprintf (buffer, 16, "%ld", m);
+-	  minutes = build_string (buffer);
+-
+-	  h = seconds_left / 3600.0;
+-	  snprintf (buffer, 16, "%3.1f", h);
+-	  hours = build_string (buffer);
+-
+-	  snprintf (buffer, 16, "%ld:%02ld", m / 60, m % 60);
+-	  remain = build_string (buffer);
+-	}
+-
+-      status = listn (CONSTYPE_HEAP, 8,
+-		      Fcons (make_number ('L'), line_status),
+-		      Fcons (make_number ('B'), battery_status),
+-		      Fcons (make_number ('b'), battery_status_symbol),
+-		      Fcons (make_number ('p'), load_percentage),
+-		      Fcons (make_number ('s'), seconds),
+-		      Fcons (make_number ('m'), minutes),
+-		      Fcons (make_number ('h'), hours),
+-		      Fcons (make_number ('t'), remain));
+-    }
+-  return status;
+-}
+-
+ 
+ #ifdef WINDOWSNT
+ typedef BOOL (WINAPI *GetDiskFreeSpaceExW_Proc)
+@@ -10786,7 +10677,6 @@ tip frame.  */);
+   defsubr (&Sw32_reconstruct_hot_key);
+   defsubr (&Sw32_toggle_lock_key);
+   defsubr (&Sw32_window_exists_p);
+-  defsubr (&Sw32_battery_status);
+   defsubr (&Sw32__menu_bar_in_use);
+ #if defined WINDOWSNT && !defined HAVE_DBUS
+   defsubr (&Sw32_notification_notify);
+-- 
+2.15.1
+

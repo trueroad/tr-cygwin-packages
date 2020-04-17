@@ -1,4 +1,4 @@
-PV=26.2
+PV=26.3
 
 /usr/sbin/update-alternatives \
     --remove emacs /usr/emacs-w32-ime/${PV}/bin/emacs.exe

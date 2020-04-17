@@ -1,0 +1,61 @@
+From fd6932c4c87a20ad3e019755c60e3fc1c322ef37 Mon Sep 17 00:00:00 2001
+From: Ken Brown <kbrown@cornell.edu>
+Date: Sat, 9 Mar 2019 17:06:54 -0500
+Subject: [PATCH] Use a runtime test for timerfd on Cygwin (Bug#34618)
+
+* src/atimer.c [HAVE_TIMERFD] (have_buggy_timerfd): New
+function.
+(init_atimer) Use it.
+---
+ src/atimer.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/src/atimer.c b/src/atimer.c
+index d36c4f1f5a..8387b8aa0e 100644
+--- a/src/atimer.c
++++ b/src/atimer.c
+@@ -28,7 +28,10 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
+ 
+ #ifdef HAVE_TIMERFD
+ #include <errno.h>
+-# include <sys/timerfd.h>
++#include <sys/timerfd.h>
++# ifdef CYGWIN
++# include <sys/utsname.h>
++# endif
+ #endif
+ 
+ #ifdef MSDOS
+@@ -557,13 +560,28 @@ Return t if all self-tests are passed, nil otherwise.  */)
+ 
+ #endif /* ENABLE_CHECKING */
+ 
++/* Cygwin has the timerfd interface starting with release 3.0.0, but
++   it is buggy until release 3.0.2. */
++#ifdef HAVE_TIMERFD
++static bool
++have_buggy_timerfd (void)
++{
++# ifdef CYGWIN
++  struct utsname name;
++  return uname (&name) < 0 || strverscmp (name.release, "3.0.2") < 0;
++# else
++  return false;
++# endif
++}
++#endif
++
+ void
+ init_atimer (void)
+ {
+ #ifdef HAVE_ITIMERSPEC
+ # ifdef HAVE_TIMERFD
+   /* Until this feature is considered stable, you can ask to not use it.  */
+-  timerfd = (egetenv ("EMACS_IGNORE_TIMERFD") ? -1 :
++  timerfd = (egetenv ("EMACS_IGNORE_TIMERFD") || have_buggy_timerfd () ? -1 :
+ 	     timerfd_create (CLOCK_REALTIME, TFD_NONBLOCK | TFD_CLOEXEC));
+ # endif
+   if (timerfd < 0)
+-- 
+2.17.0
+
