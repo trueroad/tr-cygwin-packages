@@ -4,8 +4,6 @@ STAGE1PKG_DIRS = \
 	qdbm \
 	jpegoptim \
 	freetype2 \
-	fontconfig \
-	qpdf \
 	python-scipy \
 	python-cycler \
 	python-dateutil \
