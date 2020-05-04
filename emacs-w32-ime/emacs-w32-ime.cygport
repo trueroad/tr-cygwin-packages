@@ -1,6 +1,6 @@
 NAME="emacs-w32-ime"
 VERSION="26.3"
-RELEASE=1
+RELEASE=2
 
 HOMEPAGE="
 	https://www.gnu.org/software/emacs/
@@ -20,7 +20,10 @@ PATCH_URI+=" 0001-Add-battery-support-to-all-Cygwin-builds.patch"
 PATCH_URI+=" 0001-Use-a-runtime-test-for-timerfd-on-Cygwin-Bug-34618.patch"
 
 # From http://tanehp.ec-net.jp/heppoko-lab/prog/zakki/emacs/emacs.html
-PATCH_URI+=" emacs-w32_26.3_20191207.patch"
+PATCH_URI+=" emacs-w32_26.3_20200429.patch"
+
+# Part of rzl24ozi/emacs-26.1-rc1-w32-ime.diff
+PATCH_URI+=" emacs-w32-ime-remain.patch"
 
 DEPEND="libtiff-devel
 	libgif-devel

@@ -1,6 +1,6 @@
 diff -r -u emacs-26.3/configure emacs-26.3/configure
 --- emacs-26.3/configure	2019-08-22 07:43:48.000000000 +0900
-+++ emacs-26.3/configure	2019-08-29 22:18:56.666279900 +0900
++++ emacs-26.3/configure	2020-04-22 21:40:49.510278100 +0900
 @@ -1535,6 +1535,7 @@
  docdir
  oldincludedir
@@ -74,7 +74,7 @@ diff -r -u emacs-26.3/configure emacs-26.3/configure
      RSVG_MODULE="librsvg-2.0 >= $RSVG_REQUIRED"
 diff -r -u emacs-26.3/configure.ac emacs-26.3/configure.ac
 --- emacs-26.3/configure.ac	2019-08-22 07:25:23.000000000 +0900
-+++ emacs-26.3/configure.ac	2019-08-29 22:10:56.386775900 +0900
++++ emacs-26.3/configure.ac	2020-04-22 21:40:15.079302900 +0900
 @@ -2070,6 +2070,8 @@
  XARGS_LIMIT=
  if test "${HAVE_W32}" = "yes"; then
@@ -93,6 +93,32 @@ diff -r -u emacs-26.3/configure.ac emacs-26.3/configure.ac
    if test "${with_rsvg}" != "no"; then
      RSVG_REQUIRED=2.14.0
      RSVG_MODULE="librsvg-2.0 >= $RSVG_REQUIRED"
+diff -r -u emacs-26.3/lisp/image-mode.el emacs-26.3/lisp/image-mode.el
+--- emacs-26.3/lisp/image-mode.el	2019-02-20 22:44:42.000000000 +0900
++++ emacs-26.3/lisp/image-mode.el	2019-12-18 23:51:23.097180400 +0900
+@@ -758,7 +758,7 @@
+ 	 (edges (and (null image-transform-resize)
+ 		     (window-inside-pixel-edges
+ 		      (get-buffer-window (current-buffer)))))
+-	 (type (if (fboundp 'imagemagick-types)
++	 (type (if (image--imagemagick-wanted-p filename)
+ 		   'imagemagick
+ 		 (image-type file-or-data nil data-p)))
+          ;; :scale 1: If we do not set this, create-image will apply
+@@ -805,6 +805,13 @@
+     (if (called-interactively-p 'any)
+ 	(message "Repeat this command to go back to displaying the file as text"))))
+ 
++(defun image--imagemagick-wanted-p (filename)
++  (and (fboundp 'imagemagick-types)
++       (not (eq imagemagick-types-inhibit t))
++       (not (and filename (file-name-extension filename)
++		 (memq (intern (upcase (file-name-extension filename)) obarray)
++		       imagemagick-types-inhibit)))))
++
+ (defun image-toggle-hex-display ()
+   "Toggle between image and hex display."
+   (interactive)
 diff -r -u emacs-26.3/lisp/image.el emacs-26.3/lisp/image.el
 --- emacs-26.3/lisp/image.el	2019-06-12 19:50:42.000000000 +0900
 +++ emacs-26.3/lisp/image.el	2019-08-29 22:10:56.418020200 +0900
@@ -179,7 +205,7 @@ diff -r -u emacs-26.3/src/buffer.c emacs-26.3/src/buffer.c
            pwd = realloc (pwd, len + 2);
 diff -r -u emacs-26.3/src/config.in emacs-26.3/src/config.in
 --- emacs-26.3/src/config.in	2019-08-22 07:43:50.000000000 +0900
-+++ emacs-26.3/src/config.in	2019-08-29 22:18:58.000000000 +0900
++++ emacs-26.3/src/config.in	2020-04-22 21:40:51.310467000 +0900
 @@ -1345,6 +1345,9 @@
  /* Define to use gmalloc before dumping and the system malloc after. */
  #undef HYBRID_MALLOC
@@ -266,7 +292,7 @@ diff -r -u emacs-26.3/src/frame.c emacs-26.3/src/frame.c
    {"inhibit-double-buffering",  SYMBOL_INDEX (Qinhibit_double_buffering)},
 diff -r -u emacs-26.3/src/image.c emacs-26.3/src/image.c
 --- emacs-26.3/src/image.c	2019-06-12 19:50:42.000000000 +0900
-+++ emacs-26.3/src/image.c	2019-08-29 22:10:56.455490400 +0900
++++ emacs-26.3/src/image.c	2020-02-23 09:14:51.722774800 +0900
 @@ -594,6 +594,102 @@
    return p;
  }
@@ -460,7 +486,31 @@ diff -r -u emacs-26.3/src/image.c emacs-26.3/src/image.c
  
    /* If IMG->spec specifies a file name, create a non-file spec from it.  */
    file_name = image_spec_value (img->spec, QCfile, NULL);
-@@ -9923,6 +10073,7 @@
+@@ -9255,6 +9405,7 @@
+   else
+     {
+       Lisp_Object data, original_filename;
++      char *dummy_svg_filename=NULL ;
+ 
+       data = image_spec_value (img->spec, QCdata, NULL);
+       if (!STRINGP (data))
+@@ -9262,9 +9413,14 @@
+ 	  image_error ("Invalid image data `%s'", data);
+ 	  return 0;
+ 	}
++      if( STRINGP(Vsvg_dummyfile_name_for_buffer_render) )
++	{
++	  dummy_svg_filename=SSDATA(Vsvg_dummyfile_name_for_buffer_render) ;
++	}
++
+       original_filename = BVAR (current_buffer, filename);
+       success_p = svg_load_image (f, img, SSDATA (data), SBYTES (data),
+-                                  (NILP (original_filename) ? NULL
++                                  (NILP (original_filename) ? dummy_svg_filename
+ 				   : SSDATA (original_filename)));
+     }
+ 
+@@ -9923,6 +10079,7 @@
    DEFSYM (QCscale, ":scale");
    DEFSYM (QCcolor_adjustment, ":color-adjustment");
    DEFSYM (QCmask, ":mask");
@@ -468,7 +518,7 @@ diff -r -u emacs-26.3/src/image.c emacs-26.3/src/image.c
  
    /* Other symbols.  */
    DEFSYM (Qlaplace, "laplace");
-@@ -9973,12 +10124,23 @@
+@@ -9973,12 +10130,23 @@
  	);
  #endif
  
@@ -492,7 +542,7 @@ diff -r -u emacs-26.3/src/image.c emacs-26.3/src/image.c
  #if defined (HAVE_XPM) || defined (HAVE_NS)
    DEFSYM (Qxpm, "xpm");
    ADD_IMAGE_TYPE (Qxpm);
-@@ -10012,7 +10174,7 @@
+@@ -10012,7 +10180,7 @@
  #if defined (HAVE_RSVG)
    DEFSYM (Qsvg, "svg");
    ADD_IMAGE_TYPE (Qsvg);
@@ -501,6 +551,14 @@ diff -r -u emacs-26.3/src/image.c emacs-26.3/src/image.c
    /* Other libraries used directly by svg code.  */
    DEFSYM (Qgdk_pixbuf, "gdk-pixbuf");
    DEFSYM (Qglib, "glib");
+@@ -10068,4 +10236,7 @@
+   imagemagick_render_type = 0;
+ #endif
+ 
++  DEFVAR_LISP ("svg-dummyfile-name-for-buffer-render", Vsvg_dummyfile_name_for_buffer_render,
++    doc: /* String of svg-dummy-file-name for buffer rendering.  */);
++
+ }
 diff -r -u emacs-26.3/src/keyboard.c emacs-26.3/src/keyboard.c
 --- emacs-26.3/src/keyboard.c	2019-06-12 19:50:42.000000000 +0900
 +++ emacs-26.3/src/keyboard.c	2019-08-29 22:10:56.471142800 +0900
@@ -664,7 +722,7 @@ diff -r -u emacs-26.3/src/w32.c emacs-26.3/src/w32.c
  			w32_add_to_cache (group_token.PrimaryGroup,
 diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
 --- emacs-26.3/src/w32fns.c	2019-01-07 23:26:07.000000000 +0900
-+++ emacs-26.3/src/w32fns.c	2019-12-07 23:44:09.723549700 +0900
++++ emacs-26.3/src/w32fns.c	2020-04-27 01:54:26.974642200 +0900
 @@ -56,6 +56,11 @@
  #include "w32.h"
  #endif
@@ -738,13 +796,14 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
  MonitorFromPoint_Proc monitor_from_point_fn = NULL;
  GetMonitorInfo_Proc get_monitor_info_fn = NULL;
  MonitorFromWindow_Proc monitor_from_window_fn = NULL;
-@@ -188,8 +236,13 @@
+@@ -188,8 +236,14 @@
  
  extern AppendMenuW_Proc unicode_append_menu;
  
 +#ifdef USE_W32_IME
 +/* Flag for indicating in conversion.  */
 +int ime_in_conversion = 0;
++int flag_called_get_ime_status = 0 ;
 +#else
  /* Flag to selectively ignore WM_IME_CHAR messages.  */
  static int ignore_ime_char = 0;
@@ -752,7 +811,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
  
  /* W95 mousewheel handler */
  unsigned int msh_mousewheel = 0;
-@@ -362,6 +415,18 @@
+@@ -362,6 +416,18 @@
  void x_set_icon_name (struct frame *, Lisp_Object, Lisp_Object);
  void x_explicitly_set_name (struct frame *, Lisp_Object, Lisp_Object);
  void x_set_title (struct frame *, Lisp_Object, Lisp_Object);
@@ -771,7 +830,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
  
  
  /* Store the screen positions of frame F into XPTR and YPTR.
-@@ -3612,6 +3677,23 @@
+@@ -3612,6 +3678,23 @@
  	  doubled = code_unit;
  	  continue;
  	}
@@ -795,7 +854,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
  
        /* The only "fake" characters delivered by ToUnicode() or
  	 TranslateMessage() are:
-@@ -4437,6 +4519,7 @@
+@@ -4437,6 +4520,7 @@
  				w32_get_key_modifiers (wParam, lParam));
        break;
  
@@ -803,7 +862,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
      case WM_UNICHAR:
        /* WM_UNICHAR looks promising from the docs, but the exact
  	 circumstances in which TranslateMessage sends it is one of those
-@@ -4561,6 +4644,7 @@
+@@ -4561,6 +4645,7 @@
      case WM_IME_ENDCOMPOSITION:
        ignore_ime_char = 0;
        goto dflt;
@@ -811,7 +870,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
  
        /* Simulate middle mouse button events when left and right buttons
  	 are used together, but only if user has two button mouse. */
-@@ -5380,7 +5464,80 @@
+@@ -5380,7 +5465,80 @@
        my_post_msg (&wmsg, hwnd, msg, wParam, lParam);
        return 1;
  
@@ -892,7 +951,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
        /* Check for messages registered at runtime. */
        if (msg == msh_mousewheel)
  	{
-@@ -5671,6 +5828,10 @@
+@@ -5671,6 +5829,10 @@
  					Qnil));
      }
    x_default_parameter (f, parms, Qfont, font, "font", "Font", RES_TYPE_STRING);
@@ -903,7 +962,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
  }
  
  DEFUN ("x-create-frame", Fx_create_frame, Sx_create_frame,
-@@ -8170,6 +8331,970 @@
+@@ -8170,6 +8332,981 @@
  #endif /* WINDOWSNT */
  
  
@@ -1052,6 +1111,12 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
 +  HIMC himc;
 +  int ret;
 +
++  if( flag_called_get_ime_status==0 ){
++    SetFocus(NULL);
++    SetFocus(hwnd);
++    flag_called_get_ime_status=1 ;
++  }
++
 +  himc = (ImmGetContextProc) (hwnd);
 +  ret = (ImmGetOpenStatusProc) (himc);
 +  (ImmReleaseContextProc) (hwnd, himc);
@@ -1158,6 +1223,9 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
 +    return;
 +
 +  if (!fIME || NILP(Vime_control))
++    return;
++
++  if (FACE_FROM_ID(f,0)==NULL)
 +    return;
 +
 +  if (STRINGP(ime_font = get_frame_param (f, Qime_font))
@@ -1483,6 +1551,8 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
 +  fIME = FALSE;
 +  Vime_control = Qnil;
 +  IME_event_off_count = 0;
++
++  flag_called_get_ime_status=0 ;
 +
 +  if (hImm32)
 +    {
@@ -1874,7 +1944,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
  /***********************************************************************
  			 w32 specialized functions
   ***********************************************************************/
-@@ -10379,6 +11504,9 @@
+@@ -10379,6 +11516,9 @@
    x_set_fullscreen,
    x_set_font_backend,
    x_set_alpha,
@@ -1884,7 +1954,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
    0, /* x_set_sticky */
    0, /* x_set_tool_bar_position */
    0, /* x_set_inhibit_double_buffering */
-@@ -10401,6 +11529,9 @@
+@@ -10401,6 +11541,9 @@
    w32_visible_system_caret_hwnd = NULL;
  
    DEFSYM (Qundefined_color, "undefined-color");
@@ -1894,7 +1964,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
    DEFSYM (Qcancel_timer, "cancel-timer");
    DEFSYM (Qhyper, "hyper");
    DEFSYM (Qsuper, "super");
-@@ -10747,6 +11878,17 @@
+@@ -10747,6 +11890,17 @@
  	       doc: /* Non-nil means don't display the abort dialog when aborting.  */);
    w32_disable_abort_dialog = 0;
  
@@ -1912,7 +1982,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
  #if 0 /* TODO: Port to W32 */
    defsubr (&Sx_change_window_property);
    defsubr (&Sx_delete_window_property);
-@@ -10801,6 +11943,14 @@
+@@ -10801,6 +11955,14 @@
    defsubr (&Sw32_notification_close);
  #endif
  
@@ -1927,7 +1997,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
  #ifdef WINDOWSNT
    defsubr (&Sfile_system_info);
    defsubr (&Sdefault_printer_name);
-@@ -11076,6 +12226,7 @@
+@@ -11076,6 +12238,7 @@
    get_title_bar_info_fn = (GetTitleBarInfo_Proc)
      GetProcAddress (user32_lib, "GetTitleBarInfo");
  
@@ -1935,7 +2005,7 @@ diff -r -u emacs-26.3/src/w32fns.c emacs-26.3/src/w32fns.c
    {
      HMODULE imm32_lib = GetModuleHandle ("imm32.dll");
      get_composition_string_fn = (ImmGetCompositionString_Proc)
-@@ -11087,6 +12238,7 @@
+@@ -11087,6 +12250,7 @@
      set_ime_composition_window_fn = (ImmSetCompositionWindow_Proc)
        GetProcAddress (imm32_lib, "ImmSetCompositionWindow");
    }
@@ -2034,7 +2104,7 @@ diff -r -u emacs-26.3/src/w32proc.c emacs-26.3/src/w32proc.c
  	  while (escape_char_run > 0)
 diff -r -u emacs-26.3/src/w32term.c emacs-26.3/src/w32term.c
 --- emacs-26.3/src/w32term.c	2019-02-20 22:44:42.000000000 +0900
-+++ emacs-26.3/src/w32term.c	2019-08-29 22:10:56.506579400 +0900
++++ emacs-26.3/src/w32term.c	2020-04-21 21:41:25.963145100 +0900
 @@ -5151,6 +5151,12 @@
  	    }
  
@@ -2373,8 +2443,8 @@ diff -r -u emacs-26.3/src/window.c emacs-26.3/src/window.c
  	       doc: /* Non-nil means `recenter' redraws entire frame.
  If this option is non-nil, then the `recenter' command with a nil
 --- original/emacs-26.3/lisp/international/w32-ime.el	1970-01-01 09:00:00.000000000 +0900
-+++ emacs-26.3/lisp/international/w32-ime.el	2019-08-29 22:10:56.522168200 +0900
-@@ -0,0 +1,206 @@
++++ emacs-26.3/lisp/international/w32-ime.el	2020-04-29 00:17:15.027775000 +0900
+@@ -0,0 +1,214 @@
 +;;;;; w32-ime.el ---- Meadow features for NTEmacs.
 +;;
 +;;   Author H.Miyashita
@@ -2408,6 +2478,8 @@ diff -r -u emacs-26.3/src/window.c emacs-26.3/src/window.c
 +  "List of IME state indicator string.")
 +(defvar w32-ime-mode-line-format-original nil
 +  "Original mode line format.")
++(defvar w32-ime-input-method-title nil
++  "String denoting W32-IME input method.")
 +
 +;;
 +;; Section: IME
@@ -2501,16 +2573,19 @@ diff -r -u emacs-26.3/src/window.c emacs-26.3/src/window.c
 +  (w32-ime-sync-state new))
 +
 +(defun w32-ime-mode-line-update ()
-+  (cond
-+   (w32-ime-show-mode-line
-+    (unless (window-minibuffer-p (selected-window))
-+      (setq w32-ime-mode-line-state-indicator
-+	    (nth (if (ime-get-mode) 1 2)
-+		 w32-ime-mode-line-state-indicator-list))))
-+   (t
-+    (setq w32-ime-mode-line-state-indicator
-+	  (nth 0 w32-ime-mode-line-state-indicator-list))))
-+  (force-mode-line-update))
++  (if (featurep 'w32-ime)
++      (progn
++        (cond
++         (w32-ime-show-mode-line
++          (unless (window-minibuffer-p (selected-window))
++            (setq w32-ime-mode-line-state-indicator
++                  (nth (if (ime-get-mode) 1 2)
++                       w32-ime-mode-line-state-indicator-list))))
++         (t
++          (setq w32-ime-mode-line-state-indicator
++                (nth 0 w32-ime-mode-line-state-indicator-list))))
++        (force-mode-line-update))
++    ))
 +
 +(defun w32-ime-init-mode-line-display ()
 +  (unless (member 'w32-ime-mode-line-state-indicator mode-line-format)
@@ -2569,15 +2644,18 @@ diff -r -u emacs-26.3/src/window.c emacs-26.3/src/window.c
 +	(setq describe-current-input-method-function nil)
 +	(when (eq (selected-window) (minibuffer-window))
 +	  (add-hook 'minibuffer-exit-hook 'w32-ime-exit-from-minibuffer))
-+	(ime-force-on))
++	(ime-force-on)
++        (setq current-input-method-title w32-ime-input-method-title))
 +    (setq current-input-method nil)
 +    (run-hooks 'input-method-deactivate-hook)
 +    (run-hooks 'w32-ime-off-hook)
 +    (setq describe-current-input-method-function nil)
-+    (ime-force-off))
++    (ime-force-off)
++    (setq current-input-method-title nil))
 +  (w32-ime-mode-line-update))
 +
 +(register-input-method "W32-IME" "Japanese" 'w32-ime-state-switch ""
 +		       "W32 System IME")
 +
-+(provide 'w32-ime)
++(if (symbol-function 'ime-get-mode)
++    (provide 'w32-ime))
