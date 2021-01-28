@@ -1,8 +1,8 @@
-PYTHON_WHEEL_VERSIONS="3.6"
+PYTHON_WHEEL_VERSIONS="3.8"
 inherit python-wheel
 
-NAME="python-matplotlib"
-VERSION=3.1.0
+NAME="python38-matplotlib"
+VERSION=3.3.4
 RELEASE=0
 CATEGORY="Python"
 SUMMARY="matplotlib: plotting with Python"
@@ -13,16 +13,18 @@ HOMEPAGE="https://matplotlib.org/"
 SRC_URI="https://github.com/matplotlib/matplotlib/archive/v${VERSION}.tar.gz"
 SRC_DIR="matplotlib-${VERSION}"
 
-DEPEND="gcc-core
-	gcc-g++
-	libfreetype-devel
-	libpng-devel
-	python36
-	python36-pip
-	python36-wheel
-	python36-devel
-	python36-numpy
-	python36-cycler
-	python36-dateutil
-	python36-kiwisolver
-	python36-pyparsing"
+BUILD_REQUIRES="gcc-core \
+	gcc-g++ \
+	libfreetype-devel \
+	libpng-devel \
+	python38 \
+	python38-pip \
+	python38-wheel \
+	python38-devel \
+	python38-numpy \
+	python38-cycler \
+	python38-dateutil \
+	python38-kiwisolver \
+	python38-pyparsing \
+	python38-imaging \
+	python38-pytest"

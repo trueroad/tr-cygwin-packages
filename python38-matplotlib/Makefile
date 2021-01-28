@@ -1,5 +1,5 @@
-NAME = python-matplotlib
-VERSION = 3.1.0
+NAME = python38-matplotlib
+VERSION = 3.3.4
 RELEASE = 0
 
 CYGPORT_FILE = ${PN}.cygport
