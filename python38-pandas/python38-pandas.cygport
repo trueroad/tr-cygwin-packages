@@ -1,0 +1,31 @@
+PYTHON_WHEEL_VERSIONS="3.8"
+inherit python-wheel
+
+NAME="python38-pandas"
+VERSION=1.2.1
+RELEASE=0
+CATEGORY="Python"
+SUMMARY="powerful Python data analysis toolkit"
+DESCRIPTION="pandas is a fast, powerful,
+flexible and easy to use open source data analysis and manipulation tool,
+built on top of the Python programming language."
+HOMEPAGE="https://pandas.pydata.org/"
+SRC_URI="https://github.com/pandas-dev/pandas/releases/download/v${VERSION}/pandas-${VERSION}.tar.gz"
+SRC_DIR="pandas-${VERSION}"
+
+BUILD_REQUIRES="gcc-core \
+	gcc-g++ \
+	python38 \
+	python38-pip \
+	python38-wheel \
+	python38-devel \
+	python38-numpy \
+	python38-dateutil \
+	python38-pytz \
+	python38-pytest \
+	python38-setuptools \
+	python38-cython"
+
+# If you use python38-cython-0.29.21-2 package,
+# the patch found at the following URL is required.
+# https://cygwin.com/pipermail/cygwin/2021-January/247652.html
