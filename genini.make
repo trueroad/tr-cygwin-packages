@@ -2,7 +2,7 @@
 # TrueRoad's Cygwin Packages
 # https://github.com/trueroad/tr-cygwin-packages
 #
-# Copyright (C) 2017 Masamichi Hosoda.
+# Copyright (C) 2017, 2021 Masamichi Hosoda.
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -40,11 +40,14 @@ ifneq ("$(wildcard $(WWW_DIST_ROOT)/$(INIDIR))","")
 		$(WWW_DIST_ROOT)/$(INIDIR)/setup.bz2
 	xz -zck $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini > \
 		$(WWW_DIST_ROOT)/$(INIDIR)/setup.xz
+	zstd -zck $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini > \
+		$(WWW_DIST_ROOT)/$(INIDIR)/setup.zst
 endif
 
 signini: $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini.sig \
 	$(WWW_DIST_ROOT)/$(INIDIR)/setup.bz2.sig \
-	$(WWW_DIST_ROOT)/$(INIDIR)/setup.xz.sig
+	$(WWW_DIST_ROOT)/$(INIDIR)/setup.xz.sig \
+	$(WWW_DIST_ROOT)/$(INIDIR)/setup.zst.sig
 
 %.ini.sig: %.ini
 	gpg -b $<
@@ -52,11 +55,14 @@ signini: $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini.sig \
 	gpg -b $<
 %.xz.sig: %.xz
 	gpg -b $<
+%.zst.sig: %.zst
+	gpg -b $<
 
 verifyini:
 	gpg $(WWW_DIST_ROOT)/$(INIDIR)/setup.ini.sig
 	gpg $(WWW_DIST_ROOT)/$(INIDIR)/setup.bz2.sig
 	gpg $(WWW_DIST_ROOT)/$(INIDIR)/setup.xz.sig
+	gpg $(WWW_DIST_ROOT)/$(INIDIR)/setup.zst.sig
 
 genini-all:
 	$(MAKE) INIDIR=x86_64 genini
