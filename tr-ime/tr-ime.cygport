@@ -1,0 +1,49 @@
+NAME="tr-ime"
+VERSION="0.4.1"
+RELEASE=1
+
+HOMEPAGE="https://github.com/trueroad/tr-emacs-ime-module"
+SRC_URI="https://github.com/trueroad/tr-emacs-ime-module/releases/download/v${VERSION}/tr-ime-${VERSION}.tar.gz"
+
+CATEGORY="Editors Utils"
+SUMMARY="Emulator of GNU Emacs IME patch"
+DESCRIPTION="Emulator of GNU Emacs IME patch for Windows (tr-ime) emulates the C implementation part of an IME patch for GNU Emacs that allows to input Japanese using the Windows IME (Input Method Editor)."
+
+abi_standard=1
+abi_advanced=1
+PKG_NAMES="
+	${PN}
+	${PN}-mod${abi_standard}
+	${PN}-modadv${abi_advanced}
+	${PN}-el
+	${PN}-doc
+"
+
+PKG_CONTENTS[0]=""
+
+PKG_CONTENTS[1]="
+	usr/share/emacs/site-lisp/tr-ime/tr-ime-mod-*.dll
+"
+
+PKG_CONTENTS[2]="
+	usr/share/emacs/site-lisp/tr-ime/tr-ime-modadv-*.dll
+"
+
+PKG_CONTENTS[3]="
+	usr/share/emacs/site-lisp/tr-ime/*.el
+	usr/share/emacs/site-lisp/tr-ime/*.elc
+"
+
+PKG_CONTENTS[4]="
+	usr/share/doc/
+"
+
+tr_ime_REQUIRES="tr-ime-mod${abi_standard} \
+	tr-ime-modadv${abi_advanced} \
+	tr-ime-el"
+
+BUILD_REQUIRES="gcc-core \
+	gcc-g++ \
+	w32api-headers \
+	w32api-runtime \
+	emacs-common"
