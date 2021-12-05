@@ -1,0 +1,18 @@
+PYTHON_WHEEL_VERSIONS="3.8"
+inherit python-wheel
+
+NAME="python38-fastdtw"
+VERSION=0.3.4
+RELEASE=0
+CATEGORY="Python"
+SUMMARY="Dynamic Time Warping (DTW) algorithm with an O(N) time and memory complexity"
+DESCRIPTION="Dynamic Time Warping (DTW) algorithm with an O(N) time and memory complexity."
+HOMEPAGE="https://github.com/slaypni/fastdtw"
+SRC_URI="https://github.com/slaypni/fastdtw/archive/refs/tags/v${VERSION}.tar.gz"
+SRC_DIR="fastdtw-${VERSION}"
+
+BUILD_REQUIRES="python38 \
+	python38-pip \
+	python38-wheel \
+	python38-numpy \
+	gcc-g++"
