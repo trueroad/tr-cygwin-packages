@@ -1,0 +1,25 @@
+PYTHON_WHEEL_VERSIONS="3.8"
+inherit python-wheel
+
+NAME="python38-scikit-learn"
+VERSION=1.0.1
+RELEASE=0
+CATEGORY="Python"
+SUMMARY="A set of python modules for machine learning and data mining"
+DESCRIPTION="scikit-learn is a Python module for machine learning built on top of SciPy and is distributed under the 3-Clause BSD license."
+HOMEPAGE="https://scikit-learn.org/stable/"
+SRC_URI="https://github.com/scikit-learn/scikit-learn/archive/refs/tags/${VERSION}.tar.gz"
+SRC_DIR="scikit-learn-${VERSION}"
+
+BUILD_REQUIRES="python38 \
+	python38-pip \
+	python38-wheel \
+	python38-numpy \
+	python38-scipy \
+	python38-cython \
+	python38-pytest \
+	python38-py \
+	python38-pluggy \
+	python38-iniconfig \
+	python38-sphinx \
+	gcc-g++"
