@@ -1,0 +1,21 @@
+PYTHON_WHEEL_VERSIONS="3.8"
+inherit python-wheel
+
+NAME="python38-llvmlite"
+VERSION=0.32.1
+RELEASE=0
+CATEGORY="Python"
+SUMMARY="lightweight wrapper around basic LLVM functionality"
+DESCRIPTION="A Lightweight LLVM Python Binding for Writing JIT Compilers"
+HOMEPAGE="http://llvmlite.pydata.org/"
+SRC_URI="https://github.com/numba/llvmlite/archive/refs/tags/v${VERSION}.tar.gz"
+SRC_DIR="llvmlite-${VERSION}"
+
+PATCH_URI="build-cygwin.patch"
+
+BUILD_REQUIRES="python38 \
+	python38-pip \
+	python38-wheel \
+	gcc-g++ \
+	cmake \
+	libllvm-devel"

@@ -1,0 +1,43 @@
+--- a/ffi/build.py
++++ b/ffi/build.py
+@@ -184,6 +184,8 @@
+         main_posix('freebsd', '.so')
+     elif sys.platform == 'darwin':
+         main_posix('osx', '.dylib')
++    elif sys.platform == 'cygwin':
++        main_posix('cygwin', '.dll')
+     else:
+         raise RuntimeError("unsupported platform: %r" % (sys.platform,))
+ 
+--- /dev/null
++++ a/ffi/Makefile.cygwin
+@@ -0,0 +1,18 @@
++
++CXX = g++ -std=c++11
++CXXFLAGS = $(LLVM_CXXFLAGS)
++LDFLAGS = $(LLVM_LDFLAGS)
++LIBS = $(LLVM_LIBS)
++INCLUDE = core.h
++SRC = assembly.cpp bitcode.cpp core.cpp initfini.cpp module.cpp value.cpp \
++	executionengine.cpp transforms.cpp passmanagers.cpp targets.cpp dylib.cpp \
++	linker.cpp object_file.cpp
++OUTPUT = libllvmlite.dll
++
++all: $(OUTPUT)
++
++$(OUTPUT): $(SRC) $(INCLUDE)
++	$(CXX) -shared $(CXXFLAGS) $(SRC) -o $(OUTPUT) $(LDFLAGS) $(LIBS)
++
++clean:
++	rm -rf test
+--- a/llvmlite/utils.py
++++ b/llvmlite/utils.py
+@@ -12,6 +12,8 @@
+     if os.name == 'posix':
+         if sys.platform == 'darwin':
+             return 'libllvmlite.dylib'
++        if sys.platform == 'cygwin':
++            return 'libllvmlite.dll'
+         else:
+             return 'libllvmlite.so'
+     else:
