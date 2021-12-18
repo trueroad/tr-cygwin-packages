@@ -26,6 +26,7 @@ BUILD_REQUIRES="gcc-core \
 	python39-devel \
 	python39-numpy \
 	python39-pybind11 \
+	python39-pythran \
 	python39-pytest"
 
 # interferes with get_flags_linker_so in numpy.distutils.fcompiler
