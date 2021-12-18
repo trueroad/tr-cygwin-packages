@@ -1,0 +1,22 @@
+PYTHON_WHEEL_VERSIONS="3.9"
+inherit python-wheel
+
+NAME="python39-pythran"
+VERSION=0.11.0
+RELEASE=0
+CATEGORY="Python"
+SUMMARY="Ahead of Time compiler for numeric kernels"
+DESCRIPTION="Pythran is an ahead of time compiler for a subset of the Python language, with a focus on scientific computing. It takes a Python module annotated with a few interface descriptions and turns it into a native Python module with the same interface, but (hopefully) faster."
+HOMEPAGE="https://github.com/serge-sans-paille/pythran"
+SRC_URI="https://github.com/serge-sans-paille/pythran/archive/refs/tags/${VERSION}.tar.gz"
+SRC_DIR="pythran-${VERSION}"
+
+ARCH="noarch"
+
+BUILD_REQUIRES="python39 \
+	python39-pip \
+	python39-wheel \
+	python39-ply \
+	python39-numpy \
+	python39-gast \
+	python39-beniget"
