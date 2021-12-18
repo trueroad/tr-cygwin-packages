@@ -1,5 +1,5 @@
-NAME = python38-scipy
-VERSION = 1.6.0
+NAME = python39-scipy
+VERSION = 1.7.3
 RELEASE = 0
 
 CYGPORT_FILE = ${PN}.cygport

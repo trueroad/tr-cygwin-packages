@@ -1,8 +1,8 @@
-PYTHON_WHEEL_VERSIONS="3.8"
+PYTHON_WHEEL_VERSIONS="3.9"
 inherit python-wheel
 
-NAME="python38-scipy"
-VERSION=1.6.0
+NAME="python39-scipy"
+VERSION=1.7.3
 RELEASE=0
 CATEGORY="Python"
 SUMMARY="Python scientific computing module"
@@ -20,13 +20,13 @@ BUILD_REQUIRES="gcc-core \
 	gcc-fortran \
 	liblapack-devel \
 	libcrypt-devel \
-	python38 \
-	python38-pip \
-	python38-wheel \
-	python38-devel \
-	python38-numpy \
-	python38-pybind11 \
-	python38-pytest"
+	python39 \
+	python39-pip \
+	python39-wheel \
+	python39-devel \
+	python39-numpy \
+	python39-pybind11 \
+	python39-pytest"
 
 # interferes with get_flags_linker_so in numpy.distutils.fcompiler
 unset LDFLAGS
