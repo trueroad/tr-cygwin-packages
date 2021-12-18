@@ -1,5 +1,5 @@
-NAME = python38-pandas
-VERSION = 1.2.1
+NAME = python39-pandas
+VERSION = 1.3.5
 RELEASE = 0
 
 CYGPORT_FILE = ${PN}.cygport
