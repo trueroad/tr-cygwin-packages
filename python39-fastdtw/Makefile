@@ -1,4 +1,4 @@
-NAME = python38-fastdtw
+NAME = python39-fastdtw
 VERSION = 0.3.4
 RELEASE = 0
 
