@@ -1,8 +1,8 @@
-PYTHON_WHEEL_VERSIONS="3.8"
+PYTHON_WHEEL_VERSIONS="3.9"
 inherit python-wheel
 
-NAME="python38-matplotlib"
-VERSION=3.3.4
+NAME="python39-matplotlib"
+VERSION=3.5.1
 RELEASE=0
 CATEGORY="Python"
 SUMMARY="matplotlib: plotting with Python"
@@ -10,21 +10,21 @@ DESCRIPTION="Matplotlib is a Python 2D plotting library
 which produces publication quality figures in a variety of hardcopy formats
 and interactive environments across platforms."
 HOMEPAGE="https://matplotlib.org/"
-SRC_URI="https://github.com/matplotlib/matplotlib/archive/v${VERSION}.tar.gz"
+SRC_URI="https://github.com/matplotlib/matplotlib/archive/refs/tags/v${VERSION}.tar.gz"
 SRC_DIR="matplotlib-${VERSION}"
 
 BUILD_REQUIRES="gcc-core \
 	gcc-g++ \
 	libfreetype-devel \
 	libpng-devel \
-	python38 \
-	python38-pip \
-	python38-wheel \
-	python38-devel \
-	python38-numpy \
-	python38-cycler \
-	python38-dateutil \
-	python38-kiwisolver \
-	python38-pyparsing \
-	python38-imaging \
-	python38-pytest"
+	python39 \
+	python39-pip \
+	python39-wheel \
+	python39-devel \
+	python39-numpy \
+	python39-cycler \
+	python39-dateutil \
+	python39-kiwisolver \
+	python39-pyparsing \
+	python39-imaging \
+	python39-pytest"
