@@ -1,0 +1,18 @@
+PYTHON_WHEEL_VERSIONS="3.9"
+inherit python-wheel
+
+NAME="python39-gast"
+VERSION=0.5.3
+RELEASE=0
+CATEGORY="Python"
+SUMMARY="Python AST that abstracts the underlying Python version"
+DESCRIPTION="A generic AST to represent Python2 and Python3’s Abstract Syntax Tree(AST)."
+HOMEPAGE="https://github.com/serge-sans-paille/gast"
+SRC_URI="https://github.com/serge-sans-paille/gast/archive/refs/tags/${VERSION}.tar.gz"
+SRC_DIR="gast-${VERSION}"
+
+ARCH="noarch"
+
+BUILD_REQUIRES="python39 \
+	python39-pip \
+	python39-wheel"
