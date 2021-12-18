@@ -1,0 +1,19 @@
+PYTHON_WHEEL_VERSIONS="3.9"
+inherit python-wheel
+
+NAME="python39-beniget"
+VERSION=0.4.1
+RELEASE=0
+CATEGORY="Python"
+SUMMARY="Extract semantic information about static Python code"
+DESCRIPTION="A static analyzer for Python2 and Python3 code."
+HOMEPAGE="https://github.com/serge-sans-paille/beniget"
+SRC_URI="https://github.com/serge-sans-paille/beniget/archive/refs/tags/${VERSION}.tar.gz"
+SRC_DIR="beniget-${VERSION}"
+
+ARCH="noarch"
+
+BUILD_REQUIRES="python39 \
+	python39-pip \
+	python39-wheel \
+	python39-gast"
