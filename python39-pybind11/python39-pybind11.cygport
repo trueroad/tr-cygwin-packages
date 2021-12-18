@@ -1,18 +1,18 @@
-PYTHON_WHEEL_VERSIONS="3.8"
+PYTHON_WHEEL_VERSIONS="3.9"
 inherit python-wheel
 
-NAME="python38-pybind11"
-VERSION=2.6.2
+NAME="python39-pybind11"
+VERSION=2.8.1
 RELEASE=0
 CATEGORY="Python"
 SUMMARY="Seamless operability between C++11 and Python"
 DESCRIPTION="Seamless operability between C++11 and Python"
 HOMEPAGE="https://pybind11.readthedocs.io/en/stable/"
-SRC_URI="https://github.com/pybind/pybind11/archive/v${VERSION}.tar.gz"
+SRC_URI="https://github.com/pybind/pybind11/archive/refs/tags/v${VERSION}.tar.gz"
 SRC_DIR="pybind11-${VERSION}"
 
 ARCH="noarch"
 
-BUILD_REQUIRES="python38 \
-	python38-pip \
-	python38-wheel"
+BUILD_REQUIRES="python39 \
+	python39-pip \
+	python39-wheel"
