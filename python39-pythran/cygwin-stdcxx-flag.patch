@@ -1,0 +1,11 @@
+--- a/pythran/pythran-default.cfg
++++ b/pythran/pythran-default.cfg
+@@ -4,7 +4,7 @@
+ include_dirs=
+ libs=
+ library_dirs=
+-cflags=-std=c++11
++cflags=-std=gnu++11
+ ldflags=
+ blas=blas
+ CC=

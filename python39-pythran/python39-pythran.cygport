@@ -11,6 +11,8 @@ HOMEPAGE="https://github.com/serge-sans-paille/pythran"
 SRC_URI="https://github.com/serge-sans-paille/pythran/archive/refs/tags/${VERSION}.tar.gz"
 SRC_DIR="pythran-${VERSION}"
 
+PATCH_URI="cygwin-stdcxx-flag.patch"
+
 ARCH="noarch"
 
 BUILD_REQUIRES="python39 \
