@@ -1,5 +1,5 @@
 NAME = tr-ime
-VERSION = 0.4.1
+VERSION = 0.5.0
 RELEASE = 1
 
 CYGPORT_FILE = ${PN}.cygport
